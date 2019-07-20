@@ -47,13 +47,37 @@ tokens = [
 ] + list(reserved.values())
 
 
+def t_INTEGER(t):
+    r'\d+'
+    t.value = int(t.value)
+    return t
+
+
+def t_ID(t):
+    r'[a-zA-Z_][a-zA-Z_0-9]*'
+    t.type = reserved.get(t.value, 'ID')
+    return t
+
+
+t_COLLON = r':'
+t_SEMICOLLON = r';'
+t_COMMA = r','
+t_ASSIGN = r':='
+t_LESSER = r'<'
+t_GREATER = r'>'
+t_LESSER_EQUALS = r'<='
+t_GREATER_EQUALS = r'>='
+t_EQUALS = r'='
+t_NOT_EQUALS = r'<>'
+t_AND = r'\&\&'
+t_OR = r'\|\|'
+t_NOT = r'!'
 t_PLUS = r'\+'
 t_MINUS = r'\-'
 t_TIMES = r'\*'
 t_DIVISION = r'\/'
-
-t_INTEGER = r'\d+'
-
+t_SQUARE_BRACKET_L = r'\['
+t_SQUARE_BRACKET_R = r'\]'
 t_PARENTESIS_L = r'\('
 t_PARENTESIS_R = r'\)'
 
