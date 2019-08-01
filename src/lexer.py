@@ -1,15 +1,17 @@
 import ply.lex as lex
 
 reserved = {
-    'se': 'SE',
-    'entao': 'ENTAO',
-    'senao': 'SENAO',
-    'fim': 'FIM',
-    'repita': 'REPITA',
-    'ate': 'ATE',
-    'leia': 'LEIA',
-    'escreva': 'ESCREVA',
-    'retorna': 'RETORNA'
+    'se': 'IF',
+    'então': 'THEN',
+    'senão': 'ELSE',
+    'fim': 'END',
+    'repita': 'REPEAT',
+    'até': 'UNTIL',
+    'leia': 'READ',
+    'escreva': 'WRITE',
+    'retorna': 'RETURN',
+    'inteiro': 'INTEGER',
+    'flutuante': 'FLOAT'
 }
 
 tokens = [
@@ -37,17 +39,31 @@ tokens = [
 
     'ID',
 
-    'INTEGER',
-    'FLOAT',
+    'FLOAT_LITERAL',
+    'INTEGER_LITERAL',
 
     'SQUARE_BRACKET_L',
     'SQUARE_BRACKET_R',
     'PARENTESIS_L',
-    'PARENTESIS_R'
+    'PARENTESIS_R',
+
+    'COMMENT'
 ] + list(reserved.values())
 
 
-def t_INTEGER(t):
+def t_COMMENT(t):
+    r'\{[^\}]*[^\{]*\}'
+    contador = t.value.count("\n")
+    t.lexer.lineno += contador
+
+
+def t_FLOAT_LITERAL(t):
+    r'^ [+-]?\d+(?: \.\d*(?: [eE][+-]?\d+)?)?$'
+    t.value = float(t.value)
+    return t
+
+
+def t_INTEGER_LITERAL(t):
     r'\d+'
     t.value = int(t.value)
     return t
@@ -85,6 +101,11 @@ t_PARENTESIS_R = r'\)'
 t_ignore = ' \t'
 
 
+def t_newline(t):
+    r'\n+'
+    t.lexer.lineno += len(t.value)
+
+
 def t_error(t):
     print("Illegal character '%s'" % t.value[0])
     t.lexer.skip(1)
@@ -92,9 +113,10 @@ def t_error(t):
 
 lexer = lex.lex()
 
-data = '3 + (3*4) - 2'
-lexer.input(data)
-
+arq = open('./tests/lexer_001.tpp')
+lexer.input(arq.read())
+arq.close()
 tokens = [t for t in lexer]
 
-print(tokens)
+for tok in tokens:
+    print(tok)
