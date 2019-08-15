@@ -49,7 +49,7 @@ tokens = [
 
 
 def t_COMENTARIO(t):
-    r'\{[^\}]*[^\{]*\}'
+    r'{.*}'
     contador = t.value.count("\n")
     t.lexer.lineno += contador
 
@@ -61,13 +61,13 @@ def t_IDENTIFICADOR(t):
 
 
 def t_FLUTUANTE_LITERAL(t):
-    r'[0-9]+\.[0-9]+'
+    r'(\d+\.?\d*[eE]-?[1-9]\d*)|(\d+\.\d+)'
     t.value = float(t.value)
     return t
 
 
 def t_INTEIRO_LITERAL(t):
-    r'\d+'
+    r'0|[1-9]\d*'
     t.value = int(t.value)
     return t
 
