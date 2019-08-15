@@ -12,9 +12,6 @@ class TestLexer(unittest.TestCase):
         tokens = list(map(lambda token: (token.type, token.value),
                           [token for token in lexer]))
 
-        for t in tokens:
-            print(t)
-
         self.assertSequenceEqual(
             tokens, [('INTEIRO', 'inteiro'), ('DOIS_PONTOS', ':'), ('IDENTIFICADOR', 'n'),
                      ('INTEIRO', 'inteiro'), ('IDENTIFICADOR', 'fatorial'), ('ABRE_PARENTESES',
@@ -46,6 +43,18 @@ class TestLexer(unittest.TestCase):
                                               '('), ('INTEIRO_LITERAL', 0), ('FECHA_PARENTESES', ')'),
                      ('FIM', 'fim')
                      ])
+
+    def test_literals(self):
+
+        arq = open('./codes/literals.tpp')
+        lexer.input(arq.read())
+        arq.close()
+
+        tokens = list(map(lambda token: (token.type, token.value),
+                          [token for token in lexer]))
+
+        self.assertSequenceEqual(
+            tokens, [('INTEIRO_LITERAL', 1), ('FLUTUANTE_LITERAL', 1.0), ('FLUTUANTE_LITERAL', 1.23)])
 
 
 if __name__ == '__main__':
