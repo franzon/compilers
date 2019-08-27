@@ -97,7 +97,7 @@ class TppLexer(object):
         return t
 
     def t_NUM_NOTACAO_CIENTIFICA(self, t):
-        r'\d+(\.?)[eE](-)?\d+'
+        r'\d+(\.?)[eE][-+]?\d+'
         t.value = float(t.value)
         return t
 
@@ -111,7 +111,8 @@ class TppLexer(object):
         t.lexer.lineno += len(t.value)
 
     def t_error(self, t):
-        print("Caractere inválido: '%s'" % t.value[0])
+        print(colorama.Fore.RED, "Caractere inválido: '%s'" %
+              t.value[0], colorama.Style.RESET_ALL, sep='')
         t.lexer.skip(1)
 
     def input_data(self, data):
@@ -123,5 +124,6 @@ class TppLexer(object):
             print(colorama.Fore.BLUE, '[', tok.type, ']',
                   colorama.Style.RESET_ALL, ' ', tok.value, sep='')
             count += 1
+
         print('--------------')
         print('Número de tokens: ', count)
