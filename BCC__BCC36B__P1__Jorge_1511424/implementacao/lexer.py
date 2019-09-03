@@ -55,12 +55,6 @@ class TppLexer(object):
         'COMENTARIO'
     ] + list(reserved.values())
 
-    natural = r'[0-9]+'
-    inteiro = r'(-+)?' + natural
-    flutuante = inteiro + r'\.' + natural
-    notacao_cientifica = r'(' + flutuante + '|' + \
-        inteiro + ')' + r'(eE)' + inteiro
-
     t_DOIS_PONTOS = r':'
     t_VIRGULA = r','
     t_ATRIBUICAO = r':='
@@ -98,17 +92,17 @@ class TppLexer(object):
         return t
 
     def t_NUM_NOTACAO_CIENTIFICA(self, t):
-        r'((\+|-)?[\d+]+\.?[\d+]*)(e|E)(\+|-)?[\d+]+'
+        r'(((-|\+)?[0-9]+\.[0-9]*)|((-|\+)?[0-9]+))(e|E)(-|\+)?[0-9]+'
         t.value = float(t.value)
         return t
 
     def t_NUM_PONTO_FLUTUANTE(self, t):
-        r'(-+)?[0-9]+\.[0-9]*'
+        r'(-|\+)?[0-9]+\.[0-9]*'
         t.value = float(t.value)
         return t
 
     def t_NUM_INTEIRO(self, t):
-        r'(-+)?[0-9]+'
+        r'(-|\+)?[0-9]+'
         t.value = int(t.value)
         return t
 
