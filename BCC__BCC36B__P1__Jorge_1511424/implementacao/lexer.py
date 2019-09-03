@@ -29,24 +29,24 @@ class TppLexer(object):
 
         'IGUALDADE',
         'DESIGUALDADE',
-        'ATRIBUICAO',
         'MENOR',
         'MENOR_IGUAL',
         'MAIOR',
         'MAIOR_IGUAL',
-
-        'VIRGULA',
-        'DOIS_PONTOS',
-
-        'ID',
-        'NUM_INTEIRO',
-        'NUM_PONTO_FLUTUANTE',
-        'NUM_NOTACAO_CIENTIFICA',
-
         'E_LOGICO',
         'OU_LOGICO',
         'NEGACAO',
 
+        'ATRIBUICAO',
+
+        'NUM_INTEIRO',
+        'NUM_PONTO_FLUTUANTE',
+        'NUM_NOTACAO_CIENTIFICA',
+
+        'ID',
+
+        'VIRGULA',
+        'DOIS_PONTOS',
         'ABRE_PAR',
         'FECHA_PAR',
         'ABRE_COL',
@@ -54,6 +54,12 @@ class TppLexer(object):
 
         'COMENTARIO'
     ] + list(reserved.values())
+
+    natural = r'[0-9]+'
+    inteiro = r'(-+)?' + natural
+    flutuante = inteiro + r'\.' + natural
+    notacao_cientifica = r'(' + flutuante + '|' + \
+        inteiro + ')' + r'(eE)' + inteiro
 
     t_DOIS_PONTOS = r':'
     t_VIRGULA = r','
@@ -91,18 +97,18 @@ class TppLexer(object):
         t.type = self.reserved.get(t.value, 'ID')
         return t
 
-    def t_NUM_PONTO_FLUTUANTE(self, t):
-        r'\d+\.\d+'
+    def t_NUM_NOTACAO_CIENTIFICA(self, t):
+        r'((\+|-)?[\d+]+\.?[\d+]*)(e|E)(\+|-)?[\d+]+'
         t.value = float(t.value)
         return t
 
-    def t_NUM_NOTACAO_CIENTIFICA(self, t):
-        r'\d+(\.?)[eE][-+]?\d+'
+    def t_NUM_PONTO_FLUTUANTE(self, t):
+        r'(-+)?[0-9]+\.[0-9]*'
         t.value = float(t.value)
         return t
 
     def t_NUM_INTEIRO(self, t):
-        r'0|[1-9]\d*'
+        r'(-+)?[0-9]+'
         t.value = int(t.value)
         return t
 
