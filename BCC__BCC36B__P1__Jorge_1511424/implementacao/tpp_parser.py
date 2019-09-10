@@ -42,9 +42,68 @@ class TppParser():
         '''declaracao_variaveis : tipo DOIS_PONTOS lista_variaveis'''
         p[0] = Node('declaracao_variaveis', [p[1], p[3]])
 
-    def p_parametro(self, p):
-        '''parametro : tipo DOIS_PONTOS ID
-                     | parametro ABRE_COL FECHA_COL'''
+    def p_inicializacao_variaveis(self, p):
+        '''inicializacao_variaveis : atribuicao'''
+        p[0] = Node('inicializacao_variaveis', [p[1]])
+
+    def p_lista_variaveis(self, p):
+        '''lista_variaveis : lista_variaveis VIRGULA var
+                           | var'''
+        if len(p) == 4:
+            p[0] = Node('lista_variaveis', [p[1], p[3]])
+        else:
+            p[0] = Node('lista_variaveis', [p[1]])
+
+    def p_var(self, p):
+        '''var : ID
+               | ID indice'''
+
+        if len(p) == 2:
+            p[0] = Node('var', [p[1]])
+        else:
+            p[0] = Node('var', [p[1], p[2]])
+
+    def p_indice(self, p):
+        '''indice : indice ABRE_COL expressao FECHA_COL
+                  | ABRE_COL expressao FECHA_COL'''
+        if len(p) == 5:
+            p[0] = Node('indice', [p[1], p[3]])
+        else:
+            p[0] = Node('indice', [p[2]])
+
+    def p_tipo(self, p):
+        '''tipo : INTEIRO
+                | FLUTUANTE'''
+        p[0] = Node('tipo', [], p[1])
+
+    def p_declaracao_funcao(self, p):
+        '''declaracao_funcao : tipo cabecalho
+                             | cabecalho'''
+        if len(p) == 3:
+            p[0] = Node('declaracao_funcao', [p[1], p[2]])
+        else:
+            p[0] = Node('declaracao_funcao', [p[1]])
+
+    def p_cabecalho(self, p):
+        '''cabecalho : ID ABRE_PAR lista_parametros FECHA_PAR corpo FIM'''
+        p[0] = Node('cabecalho', [p[1], p[3], p[5]])
+
+    def p_lista_parametros(self, p):
+        '''lista_parametros : lista_parametros VIRGULA parametro
+                            | parametro
+                            | vazio'''
+        if len(p) == 4:
+            p[0] = Node('lista_parametros', [p[1], p[3]])
+        else:
+            p[0] = Node('lista_parametro', p[1])
+
+    def p_parametro_1(self, p):
+        '''parametro : tipo DOIS_PONTOS ID'''
+        p[0] = Node('parametro', [p[1], p[3]])
+
+    def p_parametro_2(self, p):
+        '''parametro : parametro ABRE_COL FECHA_COL'''
+        p[0] = Node('parametro', [p[1]])
 
     def p_corpo(self, p):
         '''corpo : corpo acao
@@ -145,7 +204,7 @@ class TppParser():
                                | IGUALDADE
                                | DESIGUALDADE
                                | MENOR_IGUAL
-                               | MAIOR_IGUAK'''
+                               | MAIOR_IGUAL'''
         p[0] = Node('operador_relacional', [], p[1])
 
     def p_operador_soma(self, p):
@@ -196,6 +255,10 @@ class TppParser():
             p[0] = Node('lista_argumentos', [p[1], p[3]])
         else:
             p[0] = Node('lista_argumentos', [p[1]])
+
+    def p_comentario(self, p):
+        '''comentario : COMENTARIO'''
+        p[0] = Node('comentario', [p[1]])
 
     def p_vazio(self, p):
         '''vazio :'''
