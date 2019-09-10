@@ -82,12 +82,12 @@ class TppLexer(object):
         self.lexer = lex.lex(module=self, **kwargs)
 
     def t_COMENTARIO(self, t):
-        r'{.*}'
+        r'{[^}]*[^{]*}'
         contador = t.value.count("\n")
         t.lexer.lineno += contador
 
     def t_ID(self, t):
-        r'[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ_][0-9A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ_]*'
+        r'[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ][0-9A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ_]*'
         t.type = self.reserved.get(t.value, 'ID')
         return t
 
@@ -111,8 +111,8 @@ class TppLexer(object):
         t.lexer.lineno += len(t.value)
 
     def t_error(self, t):
-        print(colorama.Fore.RED, "Caractere inválido: '%s'" %
-              t.value[0], colorama.Style.RESET_ALL, sep='')
+        print(colorama.Fore.RED, "Caractere inválido: '%s'. Linha: %d Coluna: %d" %
+              (t.value[0], t.lineno, t.lexpos), colorama.Style.RESET_ALL, sep='')
         t.lexer.skip(1)
 
     def input_data(self, data):
