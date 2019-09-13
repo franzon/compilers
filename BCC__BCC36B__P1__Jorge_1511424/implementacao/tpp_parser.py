@@ -1,5 +1,8 @@
 import ply.yacc as yacc
+from graphviz import Digraph
 from tpp_lexer import TppLexer
+
+#g = Node('A', [Node('B', [Node('C', [], 1), Node('D', [], 2)], 444)])
 
 
 class Node:
@@ -9,8 +12,14 @@ class Node:
         self.value = value
 
     def print(self, indent):
-        print(indent * ' ' +
-              '[tipo: {}    valor: {}]'.format(self.type, self.value))
+        print(indent * ' ' + str(self))
+
+        for child in self.children:
+            if isinstance(child, Node):
+                child.print(indent + 1)
+
+    def __str__(self):
+        return '[tipo: {}    valor: {}]'.format(self.type, self.value)
 
 
 class TppParser():
@@ -19,6 +28,7 @@ class TppParser():
     def __init__(self, **kwargs):
         self.lexer = TppLexer()
         self.parser = yacc.yacc(module=self, **kwargs)
+        self.graph = Digraph()
 
     def p_programa(self, p):
         '''programa : lista_declaracoes'''
@@ -95,7 +105,7 @@ class TppParser():
         if len(p) == 4:
             p[0] = Node('lista_parametros', [p[1], p[3]])
         else:
-            p[0] = Node('lista_parametro', p[1])
+            p[0] = Node('lista_parametro', [p[1]])
 
     def p_parametro_1(self, p):
         '''parametro : tipo DOIS_PONTOS ID'''
@@ -269,3 +279,10 @@ class TppParser():
 
     def print_result(self):
         self.result.print(0)
+
+    def build_graph(self):
+
+        def traverse(node):
+            for child in node.children:
+                if isinstance(child, Node):
+                    child.print(indent + 1)
