@@ -6,17 +6,14 @@ from graphviz import Digraph
 class Node:
     counter = 0
 
-    def __init__(self, type, children=[], value=None):
-        self.type = type
-        self.children = children
+    def __init__(self, value, children=[]):
         self.value = value
+        self.children = children
         self.id = Node.counter
         Node.counter += 1
 
     def __str__(self):
-        if self.value is None:
-            return 'id -> {}\ntoken -> {}'.format(self.id, self.type)
-        return '{}_{} -> {}'.format(self.id, self.type, self.value)
+        return '{}\n{}'.format(self.id, self.value)
 
 
 class TppParser():
@@ -61,18 +58,14 @@ class TppParser():
         else:
             p[0] = Node('lista_variaveis', [p[1]])
 
-    def p_identificador(self, p):
-        '''identificador : ID'''
-        p[0] = Node('identificador', [], p[1])
-
     def p_var(self, p):
-        '''var : identificador
-               | identificador indice'''
+        '''var : ID
+               | ID indice'''
 
         if len(p) == 2:
-            p[0] = Node('var', [p[1]])
+            p[0] = Node('var', [Node(p[1])])
         else:
-            p[0] = Node('var', [p[1], p[2]])
+            p[0] = Node('var', [Node(p[1]), p[2]])
 
     def p_indice(self, p):
         '''indice : indice ABRE_COL expressao FECHA_COL
@@ -85,7 +78,7 @@ class TppParser():
     def p_tipo(self, p):
         '''tipo : INTEIRO
                 | FLUTUANTE'''
-        p[0] = Node('tipo', [], p[1])
+        p[0] = Node('tipo', [Node(p[1])])
 
     def p_declaracao_funcao(self, p):
         '''declaracao_funcao : tipo cabecalho
@@ -96,8 +89,8 @@ class TppParser():
             p[0] = Node('declaracao_funcao', [p[1]])
 
     def p_cabecalho(self, p):
-        '''cabecalho : identificador ABRE_PAR lista_parametros FECHA_PAR corpo FIM'''
-        p[0] = Node('cabecalho', [p[1], p[3], p[5]])
+        '''cabecalho : ID ABRE_PAR lista_parametros FECHA_PAR corpo FIM'''
+        p[0] = Node('cabecalho', [Node(p[1]), p[3], p[5]])
 
     def p_lista_parametros(self, p):
         '''lista_parametros : lista_parametros VIRGULA parametro
@@ -109,8 +102,8 @@ class TppParser():
             p[0] = Node('lista_parametro', [p[1]])
 
     def p_parametro_1(self, p):
-        '''parametro : tipo DOIS_PONTOS identificador'''
-        p[0] = Node('parametro', [p[1], p[3]])
+        '''parametro : tipo DOIS_PONTOS ID'''
+        p[0] = Node('parametro', [p[1], Node(p[3])])
 
     def p_parametro_2(self, p):
         '''parametro : parametro ABRE_COL FECHA_COL'''
@@ -216,26 +209,26 @@ class TppParser():
                                | DESIGUALDADE
                                | MENOR_IGUAL
                                | MAIOR_IGUAL'''
-        p[0] = Node('operador_relacional', [], p[1])
+        p[0] = Node('operador_relacional', [Node(p[1])])
 
     def p_operador_soma(self, p):
         '''operador_soma : SOMA
                           | SUBTRACAO'''
-        p[0] = Node('operador_soma', [], p[1])
+        p[0] = Node('operador_soma', [Node(p[1])])
 
     def p_operador_logico(self, p):
         '''operador_logico : E_LOGICO
                            | OU_LOGICO'''
-        p[0] = Node('operador_logico', [], p[1])
+        p[0] = Node('operador_logico', [Node(p[1])])
 
     def p_operador_negacao(self, p):
         '''operador_negacao : NEGACAO'''
-        p[0] = Node('operador_negacao', [], p[1])
+        p[0] = Node('operador_negacao', [Node(p[1])])
 
     def p_operador_multiplicacao(self, p):
         '''operador_multiplicacao : MULTIPLICACAO
                                   | DIVISAO'''
-        p[0] = Node('operador_multiplicacao', [], p[1])
+        p[0] = Node('operador_multiplicacao', [Node(p[1])])
 
     def p_fator(self, p):
         '''fator : ABRE_PAR expressao FECHA_PAR
@@ -251,11 +244,11 @@ class TppParser():
         '''numero : NUM_INTEIRO
                   | NUM_PONTO_FLUTUANTE
                   | NUM_NOTACAO_CIENTIFICA'''
-        p[0] = Node('numero', [], p[1])
+        p[0] = Node('numero', [Node(p[1])])
 
     def p_chamada_funcao(self, p):
-        '''chamada_funcao : identificador ABRE_PAR lista_argumentos FECHA_PAR'''
-        p[0] = Node('chamada_funcao', [p[1], p[3]])
+        '''chamada_funcao : ID ABRE_PAR lista_argumentos FECHA_PAR'''
+        p[0] = Node('chamada_funcao', [Node(p[1]), p[3]])
 
     def p_lista_argumentos(self, p):
         '''lista_argumentos : lista_argumentos VIRGULA expressao
