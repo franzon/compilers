@@ -22,4 +22,4 @@ arq.close()
 
 tppParser = tpp_parser.TppParser()
 tppParser.input_data(data)
-tppParser.print_result()
+tppParser.build_graph()

@@ -1,0 +1,1450 @@
+// Análise sintática
+digraph {
+	"id -> 309
+token -> programa"
+	"id -> 308
+token -> lista_declaracoes"
+	"id -> 309
+token -> programa" -> "id -> 308
+token -> lista_declaracoes"
+	"id -> 166
+token -> lista_declaracoes"
+	"id -> 308
+token -> lista_declaracoes" -> "id -> 166
+token -> lista_declaracoes"
+	"id -> 15
+token -> lista_declaracoes"
+	"id -> 166
+token -> lista_declaracoes" -> "id -> 15
+token -> lista_declaracoes"
+	"id -> 14
+token -> declaracao"
+	"id -> 15
+token -> lista_declaracoes" -> "id -> 14
+token -> declaracao"
+	"id -> 13
+token -> declaracao_variaveis"
+	"id -> 14
+token -> declaracao" -> "id -> 13
+token -> declaracao_variaveis"
+	"0_tipo -> inteiro"
+	"id -> 13
+token -> declaracao_variaveis" -> "0_tipo -> inteiro"
+	"id -> 12
+token -> lista_variaveis"
+	"id -> 13
+token -> declaracao_variaveis" -> "id -> 12
+token -> lista_variaveis"
+	"id -> 11
+token -> var"
+	"id -> 12
+token -> lista_variaveis" -> "id -> 11
+token -> var"
+	"1_identificador -> A"
+	"id -> 11
+token -> var" -> "1_identificador -> A"
+	"id -> 10
+token -> indice"
+	"id -> 11
+token -> var" -> "id -> 10
+token -> indice"
+	"id -> 9
+token -> expressao"
+	"id -> 10
+token -> indice" -> "id -> 9
+token -> expressao"
+	"id -> 8
+token -> expressao_logica"
+	"id -> 9
+token -> expressao" -> "id -> 8
+token -> expressao_logica"
+	"id -> 7
+token -> expressao_simples"
+	"id -> 8
+token -> expressao_logica" -> "id -> 7
+token -> expressao_simples"
+	"id -> 6
+token -> expressao_aditiva"
+	"id -> 7
+token -> expressao_simples" -> "id -> 6
+token -> expressao_aditiva"
+	"id -> 5
+token -> expressao_multiplicativa"
+	"id -> 6
+token -> expressao_aditiva" -> "id -> 5
+token -> expressao_multiplicativa"
+	"id -> 4
+token -> expressao_unaria"
+	"id -> 5
+token -> expressao_multiplicativa" -> "id -> 4
+token -> expressao_unaria"
+	"id -> 3
+token -> fator"
+	"id -> 4
+token -> expressao_unaria" -> "id -> 3
+token -> fator"
+	"2_numero -> 20"
+	"id -> 3
+token -> fator" -> "2_numero -> 20"
+	"id -> 165
+token -> declaracao"
+	"id -> 166
+token -> lista_declaracoes" -> "id -> 165
+token -> declaracao"
+	"id -> 164
+token -> declaracao_funcao"
+	"id -> 165
+token -> declaracao" -> "id -> 164
+token -> declaracao_funcao"
+	"16_tipo -> inteiro"
+	"id -> 164
+token -> declaracao_funcao" -> "16_tipo -> inteiro"
+	"id -> 163
+token -> cabecalho"
+	"id -> 164
+token -> declaracao_funcao" -> "id -> 163
+token -> cabecalho"
+	"17_identificador -> busca"
+	"id -> 163
+token -> cabecalho" -> "17_identificador -> busca"
+	"id -> 21
+token -> lista_parametro"
+	"id -> 163
+token -> cabecalho" -> "id -> 21
+token -> lista_parametro"
+	"id -> 20
+token -> parametro"
+	"id -> 21
+token -> lista_parametro" -> "id -> 20
+token -> parametro"
+	"18_tipo -> inteiro"
+	"id -> 20
+token -> parametro" -> "18_tipo -> inteiro"
+	"19_identificador -> n"
+	"id -> 20
+token -> parametro" -> "19_identificador -> n"
+	"id -> 162
+token -> corpo"
+	"id -> 163
+token -> cabecalho" -> "id -> 162
+token -> corpo"
+	"id -> 150
+token -> corpo"
+	"id -> 162
+token -> corpo" -> "id -> 150
+token -> corpo"
+	"id -> 64
+token -> corpo"
+	"id -> 150
+token -> corpo" -> "id -> 64
+token -> corpo"
+	"id -> 50
+token -> corpo"
+	"id -> 64
+token -> corpo" -> "id -> 50
+token -> corpo"
+	"id -> 36
+token -> corpo"
+	"id -> 50
+token -> corpo" -> "id -> 36
+token -> corpo"
+	"id -> 29
+token -> corpo"
+	"id -> 36
+token -> corpo" -> "id -> 29
+token -> corpo"
+	"id -> 22
+token -> corpo"
+	"id -> 29
+token -> corpo" -> "id -> 22
+token -> corpo"
+	"id -> 28
+token -> acao"
+	"id -> 29
+token -> corpo" -> "id -> 28
+token -> acao"
+	"id -> 27
+token -> declaracao_variaveis"
+	"id -> 28
+token -> acao" -> "id -> 27
+token -> declaracao_variaveis"
+	"23_tipo -> inteiro"
+	"id -> 27
+token -> declaracao_variaveis" -> "23_tipo -> inteiro"
+	"id -> 26
+token -> lista_variaveis"
+	"id -> 27
+token -> declaracao_variaveis" -> "id -> 26
+token -> lista_variaveis"
+	"id -> 25
+token -> var"
+	"id -> 26
+token -> lista_variaveis" -> "id -> 25
+token -> var"
+	"24_identificador -> retorno"
+	"id -> 25
+token -> var" -> "24_identificador -> retorno"
+	"id -> 35
+token -> acao"
+	"id -> 36
+token -> corpo" -> "id -> 35
+token -> acao"
+	"id -> 34
+token -> declaracao_variaveis"
+	"id -> 35
+token -> acao" -> "id -> 34
+token -> declaracao_variaveis"
+	"30_tipo -> inteiro"
+	"id -> 34
+token -> declaracao_variaveis" -> "30_tipo -> inteiro"
+	"id -> 33
+token -> lista_variaveis"
+	"id -> 34
+token -> declaracao_variaveis" -> "id -> 33
+token -> lista_variaveis"
+	"id -> 32
+token -> var"
+	"id -> 33
+token -> lista_variaveis" -> "id -> 32
+token -> var"
+	"31_identificador -> i"
+	"id -> 32
+token -> var" -> "31_identificador -> i"
+	"id -> 49
+token -> acao"
+	"id -> 50
+token -> corpo" -> "id -> 49
+token -> acao"
+	"id -> 48
+token -> expressao"
+	"id -> 49
+token -> acao" -> "id -> 48
+token -> expressao"
+	"id -> 47
+token -> atribuicao"
+	"id -> 48
+token -> expressao" -> "id -> 47
+token -> atribuicao"
+	"id -> 38
+token -> var"
+	"id -> 47
+token -> atribuicao" -> "id -> 38
+token -> var"
+	"37_identificador -> retorno"
+	"id -> 38
+token -> var" -> "37_identificador -> retorno"
+	"id -> 46
+token -> expressao"
+	"id -> 47
+token -> atribuicao" -> "id -> 46
+token -> expressao"
+	"id -> 45
+token -> expressao_logica"
+	"id -> 46
+token -> expressao" -> "id -> 45
+token -> expressao_logica"
+	"id -> 44
+token -> expressao_simples"
+	"id -> 45
+token -> expressao_logica" -> "id -> 44
+token -> expressao_simples"
+	"id -> 43
+token -> expressao_aditiva"
+	"id -> 44
+token -> expressao_simples" -> "id -> 43
+token -> expressao_aditiva"
+	"id -> 42
+token -> expressao_multiplicativa"
+	"id -> 43
+token -> expressao_aditiva" -> "id -> 42
+token -> expressao_multiplicativa"
+	"id -> 41
+token -> expressao_unaria"
+	"id -> 42
+token -> expressao_multiplicativa" -> "id -> 41
+token -> expressao_unaria"
+	"id -> 40
+token -> fator"
+	"id -> 41
+token -> expressao_unaria" -> "id -> 40
+token -> fator"
+	"39_numero -> 0"
+	"id -> 40
+token -> fator" -> "39_numero -> 0"
+	"id -> 63
+token -> acao"
+	"id -> 64
+token -> corpo" -> "id -> 63
+token -> acao"
+	"id -> 62
+token -> expressao"
+	"id -> 63
+token -> acao" -> "id -> 62
+token -> expressao"
+	"id -> 61
+token -> atribuicao"
+	"id -> 62
+token -> expressao" -> "id -> 61
+token -> atribuicao"
+	"id -> 52
+token -> var"
+	"id -> 61
+token -> atribuicao" -> "id -> 52
+token -> var"
+	"51_identificador -> i"
+	"id -> 52
+token -> var" -> "51_identificador -> i"
+	"id -> 60
+token -> expressao"
+	"id -> 61
+token -> atribuicao" -> "id -> 60
+token -> expressao"
+	"id -> 59
+token -> expressao_logica"
+	"id -> 60
+token -> expressao" -> "id -> 59
+token -> expressao_logica"
+	"id -> 58
+token -> expressao_simples"
+	"id -> 59
+token -> expressao_logica" -> "id -> 58
+token -> expressao_simples"
+	"id -> 57
+token -> expressao_aditiva"
+	"id -> 58
+token -> expressao_simples" -> "id -> 57
+token -> expressao_aditiva"
+	"id -> 56
+token -> expressao_multiplicativa"
+	"id -> 57
+token -> expressao_aditiva" -> "id -> 56
+token -> expressao_multiplicativa"
+	"id -> 55
+token -> expressao_unaria"
+	"id -> 56
+token -> expressao_multiplicativa" -> "id -> 55
+token -> expressao_unaria"
+	"id -> 54
+token -> fator"
+	"id -> 55
+token -> expressao_unaria" -> "id -> 54
+token -> fator"
+	"53_numero -> 0"
+	"id -> 54
+token -> fator" -> "53_numero -> 0"
+	"id -> 149
+token -> acao"
+	"id -> 150
+token -> corpo" -> "id -> 149
+token -> acao"
+	"id -> 148
+token -> repita"
+	"id -> 149
+token -> acao" -> "id -> 148
+token -> repita"
+	"id -> 131
+token -> corpo"
+	"id -> 148
+token -> repita" -> "id -> 131
+token -> corpo"
+	"id -> 110
+token -> corpo"
+	"id -> 131
+token -> corpo" -> "id -> 110
+token -> corpo"
+	"id -> 65
+token -> corpo"
+	"id -> 110
+token -> corpo" -> "id -> 65
+token -> corpo"
+	"id -> 109
+token -> acao"
+	"id -> 110
+token -> corpo" -> "id -> 109
+token -> acao"
+	"id -> 108
+token -> se"
+	"id -> 109
+token -> acao" -> "id -> 108
+token -> se"
+	"id -> 92
+token -> expressao"
+	"id -> 108
+token -> se" -> "id -> 92
+token -> expressao"
+	"id -> 91
+token -> expressao_logica"
+	"id -> 92
+token -> expressao" -> "id -> 91
+token -> expressao_logica"
+	"id -> 90
+token -> expressao_simples"
+	"id -> 91
+token -> expressao_logica" -> "id -> 90
+token -> expressao_simples"
+	"id -> 82
+token -> expressao_simples"
+	"id -> 90
+token -> expressao_simples" -> "id -> 82
+token -> expressao_simples"
+	"id -> 81
+token -> expressao_aditiva"
+	"id -> 82
+token -> expressao_simples" -> "id -> 81
+token -> expressao_aditiva"
+	"id -> 80
+token -> expressao_multiplicativa"
+	"id -> 81
+token -> expressao_aditiva" -> "id -> 80
+token -> expressao_multiplicativa"
+	"id -> 79
+token -> expressao_unaria"
+	"id -> 80
+token -> expressao_multiplicativa" -> "id -> 79
+token -> expressao_unaria"
+	"id -> 78
+token -> fator"
+	"id -> 79
+token -> expressao_unaria" -> "id -> 78
+token -> fator"
+	"id -> 77
+token -> var"
+	"id -> 78
+token -> fator" -> "id -> 77
+token -> var"
+	"66_identificador -> A"
+	"id -> 77
+token -> var" -> "66_identificador -> A"
+	"id -> 76
+token -> indice"
+	"id -> 77
+token -> var" -> "id -> 76
+token -> indice"
+	"id -> 75
+token -> expressao"
+	"id -> 76
+token -> indice" -> "id -> 75
+token -> expressao"
+	"id -> 74
+token -> expressao_logica"
+	"id -> 75
+token -> expressao" -> "id -> 74
+token -> expressao_logica"
+	"id -> 73
+token -> expressao_simples"
+	"id -> 74
+token -> expressao_logica" -> "id -> 73
+token -> expressao_simples"
+	"id -> 72
+token -> expressao_aditiva"
+	"id -> 73
+token -> expressao_simples" -> "id -> 72
+token -> expressao_aditiva"
+	"id -> 71
+token -> expressao_multiplicativa"
+	"id -> 72
+token -> expressao_aditiva" -> "id -> 71
+token -> expressao_multiplicativa"
+	"id -> 70
+token -> expressao_unaria"
+	"id -> 71
+token -> expressao_multiplicativa" -> "id -> 70
+token -> expressao_unaria"
+	"id -> 69
+token -> fator"
+	"id -> 70
+token -> expressao_unaria" -> "id -> 69
+token -> fator"
+	"id -> 68
+token -> var"
+	"id -> 69
+token -> fator" -> "id -> 68
+token -> var"
+	"67_identificador -> i"
+	"id -> 68
+token -> var" -> "67_identificador -> i"
+	"83_operador_relacional -> ="
+	"id -> 90
+token -> expressao_simples" -> "83_operador_relacional -> ="
+	"id -> 89
+token -> expressao_aditiva"
+	"id -> 90
+token -> expressao_simples" -> "id -> 89
+token -> expressao_aditiva"
+	"id -> 88
+token -> expressao_multiplicativa"
+	"id -> 89
+token -> expressao_aditiva" -> "id -> 88
+token -> expressao_multiplicativa"
+	"id -> 87
+token -> expressao_unaria"
+	"id -> 88
+token -> expressao_multiplicativa" -> "id -> 87
+token -> expressao_unaria"
+	"id -> 86
+token -> fator"
+	"id -> 87
+token -> expressao_unaria" -> "id -> 86
+token -> fator"
+	"id -> 85
+token -> var"
+	"id -> 86
+token -> fator" -> "id -> 85
+token -> var"
+	"84_identificador -> n"
+	"id -> 85
+token -> var" -> "84_identificador -> n"
+	"id -> 107
+token -> corpo"
+	"id -> 108
+token -> se" -> "id -> 107
+token -> corpo"
+	"id -> 93
+token -> corpo"
+	"id -> 107
+token -> corpo" -> "id -> 93
+token -> corpo"
+	"id -> 106
+token -> acao"
+	"id -> 107
+token -> corpo" -> "id -> 106
+token -> acao"
+	"id -> 105
+token -> expressao"
+	"id -> 106
+token -> acao" -> "id -> 105
+token -> expressao"
+	"id -> 104
+token -> atribuicao"
+	"id -> 105
+token -> expressao" -> "id -> 104
+token -> atribuicao"
+	"id -> 95
+token -> var"
+	"id -> 104
+token -> atribuicao" -> "id -> 95
+token -> var"
+	"94_identificador -> retorno"
+	"id -> 95
+token -> var" -> "94_identificador -> retorno"
+	"id -> 103
+token -> expressao"
+	"id -> 104
+token -> atribuicao" -> "id -> 103
+token -> expressao"
+	"id -> 102
+token -> expressao_logica"
+	"id -> 103
+token -> expressao" -> "id -> 102
+token -> expressao_logica"
+	"id -> 101
+token -> expressao_simples"
+	"id -> 102
+token -> expressao_logica" -> "id -> 101
+token -> expressao_simples"
+	"id -> 100
+token -> expressao_aditiva"
+	"id -> 101
+token -> expressao_simples" -> "id -> 100
+token -> expressao_aditiva"
+	"id -> 99
+token -> expressao_multiplicativa"
+	"id -> 100
+token -> expressao_aditiva" -> "id -> 99
+token -> expressao_multiplicativa"
+	"id -> 98
+token -> expressao_unaria"
+	"id -> 99
+token -> expressao_multiplicativa" -> "id -> 98
+token -> expressao_unaria"
+	"id -> 97
+token -> fator"
+	"id -> 98
+token -> expressao_unaria" -> "id -> 97
+token -> fator"
+	"96_numero -> 1"
+	"id -> 97
+token -> fator" -> "96_numero -> 1"
+	"id -> 130
+token -> acao"
+	"id -> 131
+token -> corpo" -> "id -> 130
+token -> acao"
+	"id -> 129
+token -> expressao"
+	"id -> 130
+token -> acao" -> "id -> 129
+token -> expressao"
+	"id -> 128
+token -> atribuicao"
+	"id -> 129
+token -> expressao" -> "id -> 128
+token -> atribuicao"
+	"id -> 112
+token -> var"
+	"id -> 128
+token -> atribuicao" -> "id -> 112
+token -> var"
+	"111_identificador -> i"
+	"id -> 112
+token -> var" -> "111_identificador -> i"
+	"id -> 127
+token -> expressao"
+	"id -> 128
+token -> atribuicao" -> "id -> 127
+token -> expressao"
+	"id -> 126
+token -> expressao_logica"
+	"id -> 127
+token -> expressao" -> "id -> 126
+token -> expressao_logica"
+	"id -> 125
+token -> expressao_simples"
+	"id -> 126
+token -> expressao_logica" -> "id -> 125
+token -> expressao_simples"
+	"id -> 124
+token -> expressao_aditiva"
+	"id -> 125
+token -> expressao_simples" -> "id -> 124
+token -> expressao_aditiva"
+	"id -> 118
+token -> expressao_aditiva"
+	"id -> 124
+token -> expressao_aditiva" -> "id -> 118
+token -> expressao_aditiva"
+	"id -> 117
+token -> expressao_multiplicativa"
+	"id -> 118
+token -> expressao_aditiva" -> "id -> 117
+token -> expressao_multiplicativa"
+	"id -> 116
+token -> expressao_unaria"
+	"id -> 117
+token -> expressao_multiplicativa" -> "id -> 116
+token -> expressao_unaria"
+	"id -> 115
+token -> fator"
+	"id -> 116
+token -> expressao_unaria" -> "id -> 115
+token -> fator"
+	"id -> 114
+token -> var"
+	"id -> 115
+token -> fator" -> "id -> 114
+token -> var"
+	"113_identificador -> i"
+	"id -> 114
+token -> var" -> "113_identificador -> i"
+	"119_operador_soma -> +"
+	"id -> 124
+token -> expressao_aditiva" -> "119_operador_soma -> +"
+	"id -> 123
+token -> expressao_multiplicativa"
+	"id -> 124
+token -> expressao_aditiva" -> "id -> 123
+token -> expressao_multiplicativa"
+	"id -> 122
+token -> expressao_unaria"
+	"id -> 123
+token -> expressao_multiplicativa" -> "id -> 122
+token -> expressao_unaria"
+	"id -> 121
+token -> fator"
+	"id -> 122
+token -> expressao_unaria" -> "id -> 121
+token -> fator"
+	"120_numero -> 1"
+	"id -> 121
+token -> fator" -> "120_numero -> 1"
+	"id -> 147
+token -> expressao"
+	"id -> 148
+token -> repita" -> "id -> 147
+token -> expressao"
+	"id -> 146
+token -> expressao_logica"
+	"id -> 147
+token -> expressao" -> "id -> 146
+token -> expressao_logica"
+	"id -> 145
+token -> expressao_simples"
+	"id -> 146
+token -> expressao_logica" -> "id -> 145
+token -> expressao_simples"
+	"id -> 138
+token -> expressao_simples"
+	"id -> 145
+token -> expressao_simples" -> "id -> 138
+token -> expressao_simples"
+	"id -> 137
+token -> expressao_aditiva"
+	"id -> 138
+token -> expressao_simples" -> "id -> 137
+token -> expressao_aditiva"
+	"id -> 136
+token -> expressao_multiplicativa"
+	"id -> 137
+token -> expressao_aditiva" -> "id -> 136
+token -> expressao_multiplicativa"
+	"id -> 135
+token -> expressao_unaria"
+	"id -> 136
+token -> expressao_multiplicativa" -> "id -> 135
+token -> expressao_unaria"
+	"id -> 134
+token -> fator"
+	"id -> 135
+token -> expressao_unaria" -> "id -> 134
+token -> fator"
+	"id -> 133
+token -> var"
+	"id -> 134
+token -> fator" -> "id -> 133
+token -> var"
+	"132_identificador -> i"
+	"id -> 133
+token -> var" -> "132_identificador -> i"
+	"139_operador_relacional -> ="
+	"id -> 145
+token -> expressao_simples" -> "139_operador_relacional -> ="
+	"id -> 144
+token -> expressao_aditiva"
+	"id -> 145
+token -> expressao_simples" -> "id -> 144
+token -> expressao_aditiva"
+	"id -> 143
+token -> expressao_multiplicativa"
+	"id -> 144
+token -> expressao_aditiva" -> "id -> 143
+token -> expressao_multiplicativa"
+	"id -> 142
+token -> expressao_unaria"
+	"id -> 143
+token -> expressao_multiplicativa" -> "id -> 142
+token -> expressao_unaria"
+	"id -> 141
+token -> fator"
+	"id -> 142
+token -> expressao_unaria" -> "id -> 141
+token -> fator"
+	"140_numero -> 20"
+	"id -> 141
+token -> fator" -> "140_numero -> 20"
+	"id -> 161
+token -> acao"
+	"id -> 162
+token -> corpo" -> "id -> 161
+token -> acao"
+	"id -> 160
+token -> retorna"
+	"id -> 161
+token -> acao" -> "id -> 160
+token -> retorna"
+	"id -> 159
+token -> expressao"
+	"id -> 160
+token -> retorna" -> "id -> 159
+token -> expressao"
+	"id -> 158
+token -> expressao_logica"
+	"id -> 159
+token -> expressao" -> "id -> 158
+token -> expressao_logica"
+	"id -> 157
+token -> expressao_simples"
+	"id -> 158
+token -> expressao_logica" -> "id -> 157
+token -> expressao_simples"
+	"id -> 156
+token -> expressao_aditiva"
+	"id -> 157
+token -> expressao_simples" -> "id -> 156
+token -> expressao_aditiva"
+	"id -> 155
+token -> expressao_multiplicativa"
+	"id -> 156
+token -> expressao_aditiva" -> "id -> 155
+token -> expressao_multiplicativa"
+	"id -> 154
+token -> expressao_unaria"
+	"id -> 155
+token -> expressao_multiplicativa" -> "id -> 154
+token -> expressao_unaria"
+	"id -> 153
+token -> fator"
+	"id -> 154
+token -> expressao_unaria" -> "id -> 153
+token -> fator"
+	"id -> 152
+token -> var"
+	"id -> 153
+token -> fator" -> "id -> 152
+token -> var"
+	"151_identificador -> retorno"
+	"id -> 152
+token -> var" -> "151_identificador -> retorno"
+	"id -> 307
+token -> declaracao"
+	"id -> 308
+token -> lista_declaracoes" -> "id -> 307
+token -> declaracao"
+	"id -> 306
+token -> declaracao_funcao"
+	"id -> 307
+token -> declaracao" -> "id -> 306
+token -> declaracao_funcao"
+	"167_tipo -> inteiro"
+	"id -> 306
+token -> declaracao_funcao" -> "167_tipo -> inteiro"
+	"id -> 305
+token -> cabecalho"
+	"id -> 306
+token -> declaracao_funcao" -> "id -> 305
+token -> cabecalho"
+	"168_identificador -> principal"
+	"id -> 305
+token -> cabecalho" -> "168_identificador -> principal"
+	"id -> 169
+token -> lista_parametro"
+	"id -> 305
+token -> cabecalho" -> "id -> 169
+token -> lista_parametro"
+	"id -> 304
+token -> corpo"
+	"id -> 305
+token -> cabecalho" -> "id -> 304
+token -> corpo"
+	"id -> 284
+token -> corpo"
+	"id -> 304
+token -> corpo" -> "id -> 284
+token -> corpo"
+	"id -> 262
+token -> corpo"
+	"id -> 284
+token -> corpo" -> "id -> 262
+token -> corpo"
+	"id -> 257
+token -> corpo"
+	"id -> 262
+token -> corpo" -> "id -> 257
+token -> corpo"
+	"id -> 191
+token -> corpo"
+	"id -> 257
+token -> corpo" -> "id -> 191
+token -> corpo"
+	"id -> 177
+token -> corpo"
+	"id -> 191
+token -> corpo" -> "id -> 177
+token -> corpo"
+	"id -> 170
+token -> corpo"
+	"id -> 177
+token -> corpo" -> "id -> 170
+token -> corpo"
+	"id -> 176
+token -> acao"
+	"id -> 177
+token -> corpo" -> "id -> 176
+token -> acao"
+	"id -> 175
+token -> declaracao_variaveis"
+	"id -> 176
+token -> acao" -> "id -> 175
+token -> declaracao_variaveis"
+	"171_tipo -> inteiro"
+	"id -> 175
+token -> declaracao_variaveis" -> "171_tipo -> inteiro"
+	"id -> 174
+token -> lista_variaveis"
+	"id -> 175
+token -> declaracao_variaveis" -> "id -> 174
+token -> lista_variaveis"
+	"id -> 173
+token -> var"
+	"id -> 174
+token -> lista_variaveis" -> "id -> 173
+token -> var"
+	"172_identificador -> i"
+	"id -> 173
+token -> var" -> "172_identificador -> i"
+	"id -> 190
+token -> acao"
+	"id -> 191
+token -> corpo" -> "id -> 190
+token -> acao"
+	"id -> 189
+token -> expressao"
+	"id -> 190
+token -> acao" -> "id -> 189
+token -> expressao"
+	"id -> 188
+token -> atribuicao"
+	"id -> 189
+token -> expressao" -> "id -> 188
+token -> atribuicao"
+	"id -> 179
+token -> var"
+	"id -> 188
+token -> atribuicao" -> "id -> 179
+token -> var"
+	"178_identificador -> i"
+	"id -> 179
+token -> var" -> "178_identificador -> i"
+	"id -> 187
+token -> expressao"
+	"id -> 188
+token -> atribuicao" -> "id -> 187
+token -> expressao"
+	"id -> 186
+token -> expressao_logica"
+	"id -> 187
+token -> expressao" -> "id -> 186
+token -> expressao_logica"
+	"id -> 185
+token -> expressao_simples"
+	"id -> 186
+token -> expressao_logica" -> "id -> 185
+token -> expressao_simples"
+	"id -> 184
+token -> expressao_aditiva"
+	"id -> 185
+token -> expressao_simples" -> "id -> 184
+token -> expressao_aditiva"
+	"id -> 183
+token -> expressao_multiplicativa"
+	"id -> 184
+token -> expressao_aditiva" -> "id -> 183
+token -> expressao_multiplicativa"
+	"id -> 182
+token -> expressao_unaria"
+	"id -> 183
+token -> expressao_multiplicativa" -> "id -> 182
+token -> expressao_unaria"
+	"id -> 181
+token -> fator"
+	"id -> 182
+token -> expressao_unaria" -> "id -> 181
+token -> fator"
+	"180_numero -> 0"
+	"id -> 181
+token -> fator" -> "180_numero -> 0"
+	"id -> 256
+token -> acao"
+	"id -> 257
+token -> corpo" -> "id -> 256
+token -> acao"
+	"id -> 255
+token -> repita"
+	"id -> 256
+token -> acao" -> "id -> 255
+token -> repita"
+	"id -> 238
+token -> corpo"
+	"id -> 255
+token -> repita" -> "id -> 238
+token -> corpo"
+	"id -> 217
+token -> corpo"
+	"id -> 238
+token -> corpo" -> "id -> 217
+token -> corpo"
+	"id -> 192
+token -> corpo"
+	"id -> 217
+token -> corpo" -> "id -> 192
+token -> corpo"
+	"id -> 216
+token -> acao"
+	"id -> 217
+token -> corpo" -> "id -> 216
+token -> acao"
+	"id -> 215
+token -> expressao"
+	"id -> 216
+token -> acao" -> "id -> 215
+token -> expressao"
+	"id -> 214
+token -> atribuicao"
+	"id -> 215
+token -> expressao" -> "id -> 214
+token -> atribuicao"
+	"id -> 204
+token -> var"
+	"id -> 214
+token -> atribuicao" -> "id -> 204
+token -> var"
+	"193_identificador -> A"
+	"id -> 204
+token -> var" -> "193_identificador -> A"
+	"id -> 203
+token -> indice"
+	"id -> 204
+token -> var" -> "id -> 203
+token -> indice"
+	"id -> 202
+token -> expressao"
+	"id -> 203
+token -> indice" -> "id -> 202
+token -> expressao"
+	"id -> 201
+token -> expressao_logica"
+	"id -> 202
+token -> expressao" -> "id -> 201
+token -> expressao_logica"
+	"id -> 200
+token -> expressao_simples"
+	"id -> 201
+token -> expressao_logica" -> "id -> 200
+token -> expressao_simples"
+	"id -> 199
+token -> expressao_aditiva"
+	"id -> 200
+token -> expressao_simples" -> "id -> 199
+token -> expressao_aditiva"
+	"id -> 198
+token -> expressao_multiplicativa"
+	"id -> 199
+token -> expressao_aditiva" -> "id -> 198
+token -> expressao_multiplicativa"
+	"id -> 197
+token -> expressao_unaria"
+	"id -> 198
+token -> expressao_multiplicativa" -> "id -> 197
+token -> expressao_unaria"
+	"id -> 196
+token -> fator"
+	"id -> 197
+token -> expressao_unaria" -> "id -> 196
+token -> fator"
+	"id -> 195
+token -> var"
+	"id -> 196
+token -> fator" -> "id -> 195
+token -> var"
+	"194_identificador -> i"
+	"id -> 195
+token -> var" -> "194_identificador -> i"
+	"id -> 213
+token -> expressao"
+	"id -> 214
+token -> atribuicao" -> "id -> 213
+token -> expressao"
+	"id -> 212
+token -> expressao_logica"
+	"id -> 213
+token -> expressao" -> "id -> 212
+token -> expressao_logica"
+	"id -> 211
+token -> expressao_simples"
+	"id -> 212
+token -> expressao_logica" -> "id -> 211
+token -> expressao_simples"
+	"id -> 210
+token -> expressao_aditiva"
+	"id -> 211
+token -> expressao_simples" -> "id -> 210
+token -> expressao_aditiva"
+	"id -> 209
+token -> expressao_multiplicativa"
+	"id -> 210
+token -> expressao_aditiva" -> "id -> 209
+token -> expressao_multiplicativa"
+	"id -> 208
+token -> expressao_unaria"
+	"id -> 209
+token -> expressao_multiplicativa" -> "id -> 208
+token -> expressao_unaria"
+	"id -> 207
+token -> fator"
+	"id -> 208
+token -> expressao_unaria" -> "id -> 207
+token -> fator"
+	"id -> 206
+token -> var"
+	"id -> 207
+token -> fator" -> "id -> 206
+token -> var"
+	"205_identificador -> i"
+	"id -> 206
+token -> var" -> "205_identificador -> i"
+	"id -> 237
+token -> acao"
+	"id -> 238
+token -> corpo" -> "id -> 237
+token -> acao"
+	"id -> 236
+token -> expressao"
+	"id -> 237
+token -> acao" -> "id -> 236
+token -> expressao"
+	"id -> 235
+token -> atribuicao"
+	"id -> 236
+token -> expressao" -> "id -> 235
+token -> atribuicao"
+	"id -> 219
+token -> var"
+	"id -> 235
+token -> atribuicao" -> "id -> 219
+token -> var"
+	"218_identificador -> i"
+	"id -> 219
+token -> var" -> "218_identificador -> i"
+	"id -> 234
+token -> expressao"
+	"id -> 235
+token -> atribuicao" -> "id -> 234
+token -> expressao"
+	"id -> 233
+token -> expressao_logica"
+	"id -> 234
+token -> expressao" -> "id -> 233
+token -> expressao_logica"
+	"id -> 232
+token -> expressao_simples"
+	"id -> 233
+token -> expressao_logica" -> "id -> 232
+token -> expressao_simples"
+	"id -> 231
+token -> expressao_aditiva"
+	"id -> 232
+token -> expressao_simples" -> "id -> 231
+token -> expressao_aditiva"
+	"id -> 225
+token -> expressao_aditiva"
+	"id -> 231
+token -> expressao_aditiva" -> "id -> 225
+token -> expressao_aditiva"
+	"id -> 224
+token -> expressao_multiplicativa"
+	"id -> 225
+token -> expressao_aditiva" -> "id -> 224
+token -> expressao_multiplicativa"
+	"id -> 223
+token -> expressao_unaria"
+	"id -> 224
+token -> expressao_multiplicativa" -> "id -> 223
+token -> expressao_unaria"
+	"id -> 222
+token -> fator"
+	"id -> 223
+token -> expressao_unaria" -> "id -> 222
+token -> fator"
+	"id -> 221
+token -> var"
+	"id -> 222
+token -> fator" -> "id -> 221
+token -> var"
+	"220_identificador -> i"
+	"id -> 221
+token -> var" -> "220_identificador -> i"
+	"226_operador_soma -> +"
+	"id -> 231
+token -> expressao_aditiva" -> "226_operador_soma -> +"
+	"id -> 230
+token -> expressao_multiplicativa"
+	"id -> 231
+token -> expressao_aditiva" -> "id -> 230
+token -> expressao_multiplicativa"
+	"id -> 229
+token -> expressao_unaria"
+	"id -> 230
+token -> expressao_multiplicativa" -> "id -> 229
+token -> expressao_unaria"
+	"id -> 228
+token -> fator"
+	"id -> 229
+token -> expressao_unaria" -> "id -> 228
+token -> fator"
+	"227_numero -> 1"
+	"id -> 228
+token -> fator" -> "227_numero -> 1"
+	"id -> 254
+token -> expressao"
+	"id -> 255
+token -> repita" -> "id -> 254
+token -> expressao"
+	"id -> 253
+token -> expressao_logica"
+	"id -> 254
+token -> expressao" -> "id -> 253
+token -> expressao_logica"
+	"id -> 252
+token -> expressao_simples"
+	"id -> 253
+token -> expressao_logica" -> "id -> 252
+token -> expressao_simples"
+	"id -> 245
+token -> expressao_simples"
+	"id -> 252
+token -> expressao_simples" -> "id -> 245
+token -> expressao_simples"
+	"id -> 244
+token -> expressao_aditiva"
+	"id -> 245
+token -> expressao_simples" -> "id -> 244
+token -> expressao_aditiva"
+	"id -> 243
+token -> expressao_multiplicativa"
+	"id -> 244
+token -> expressao_aditiva" -> "id -> 243
+token -> expressao_multiplicativa"
+	"id -> 242
+token -> expressao_unaria"
+	"id -> 243
+token -> expressao_multiplicativa" -> "id -> 242
+token -> expressao_unaria"
+	"id -> 241
+token -> fator"
+	"id -> 242
+token -> expressao_unaria" -> "id -> 241
+token -> fator"
+	"id -> 240
+token -> var"
+	"id -> 241
+token -> fator" -> "id -> 240
+token -> var"
+	"239_identificador -> i"
+	"id -> 240
+token -> var" -> "239_identificador -> i"
+	"246_operador_relacional -> ="
+	"id -> 252
+token -> expressao_simples" -> "246_operador_relacional -> ="
+	"id -> 251
+token -> expressao_aditiva"
+	"id -> 252
+token -> expressao_simples" -> "id -> 251
+token -> expressao_aditiva"
+	"id -> 250
+token -> expressao_multiplicativa"
+	"id -> 251
+token -> expressao_aditiva" -> "id -> 250
+token -> expressao_multiplicativa"
+	"id -> 249
+token -> expressao_unaria"
+	"id -> 250
+token -> expressao_multiplicativa" -> "id -> 249
+token -> expressao_unaria"
+	"id -> 248
+token -> fator"
+	"id -> 249
+token -> expressao_unaria" -> "id -> 248
+token -> fator"
+	"247_numero -> 20"
+	"id -> 248
+token -> fator" -> "247_numero -> 20"
+	"id -> 261
+token -> acao"
+	"id -> 262
+token -> corpo" -> "id -> 261
+token -> acao"
+	"id -> 260
+token -> leia"
+	"id -> 261
+token -> acao" -> "id -> 260
+token -> leia"
+	"id -> 259
+token -> var"
+	"id -> 260
+token -> leia" -> "id -> 259
+token -> var"
+	"258_identificador -> n"
+	"id -> 259
+token -> var" -> "258_identificador -> n"
+	"id -> 283
+token -> acao"
+	"id -> 284
+token -> corpo" -> "id -> 283
+token -> acao"
+	"id -> 282
+token -> escreva"
+	"id -> 283
+token -> acao" -> "id -> 282
+token -> escreva"
+	"id -> 281
+token -> expressao"
+	"id -> 282
+token -> escreva" -> "id -> 281
+token -> expressao"
+	"id -> 280
+token -> expressao_logica"
+	"id -> 281
+token -> expressao" -> "id -> 280
+token -> expressao_logica"
+	"id -> 279
+token -> expressao_simples"
+	"id -> 280
+token -> expressao_logica" -> "id -> 279
+token -> expressao_simples"
+	"id -> 278
+token -> expressao_aditiva"
+	"id -> 279
+token -> expressao_simples" -> "id -> 278
+token -> expressao_aditiva"
+	"id -> 277
+token -> expressao_multiplicativa"
+	"id -> 278
+token -> expressao_aditiva" -> "id -> 277
+token -> expressao_multiplicativa"
+	"id -> 276
+token -> expressao_unaria"
+	"id -> 277
+token -> expressao_multiplicativa" -> "id -> 276
+token -> expressao_unaria"
+	"id -> 275
+token -> fator"
+	"id -> 276
+token -> expressao_unaria" -> "id -> 275
+token -> fator"
+	"id -> 274
+token -> chamada_funcao"
+	"id -> 275
+token -> fator" -> "id -> 274
+token -> chamada_funcao"
+	"263_identificador -> busca"
+	"id -> 274
+token -> chamada_funcao" -> "263_identificador -> busca"
+	"id -> 273
+token -> lista_argumentos"
+	"id -> 274
+token -> chamada_funcao" -> "id -> 273
+token -> lista_argumentos"
+	"id -> 272
+token -> expressao"
+	"id -> 273
+token -> lista_argumentos" -> "id -> 272
+token -> expressao"
+	"id -> 271
+token -> expressao_logica"
+	"id -> 272
+token -> expressao" -> "id -> 271
+token -> expressao_logica"
+	"id -> 270
+token -> expressao_simples"
+	"id -> 271
+token -> expressao_logica" -> "id -> 270
+token -> expressao_simples"
+	"id -> 269
+token -> expressao_aditiva"
+	"id -> 270
+token -> expressao_simples" -> "id -> 269
+token -> expressao_aditiva"
+	"id -> 268
+token -> expressao_multiplicativa"
+	"id -> 269
+token -> expressao_aditiva" -> "id -> 268
+token -> expressao_multiplicativa"
+	"id -> 267
+token -> expressao_unaria"
+	"id -> 268
+token -> expressao_multiplicativa" -> "id -> 267
+token -> expressao_unaria"
+	"id -> 266
+token -> fator"
+	"id -> 267
+token -> expressao_unaria" -> "id -> 266
+token -> fator"
+	"id -> 265
+token -> var"
+	"id -> 266
+token -> fator" -> "id -> 265
+token -> var"
+	"264_identificador -> n"
+	"id -> 265
+token -> var" -> "264_identificador -> n"
+	"id -> 303
+token -> acao"
+	"id -> 304
+token -> corpo" -> "id -> 303
+token -> acao"
+	"id -> 302
+token -> expressao"
+	"id -> 303
+token -> acao" -> "id -> 302
+token -> expressao"
+	"id -> 301
+token -> expressao_logica"
+	"id -> 302
+token -> expressao" -> "id -> 301
+token -> expressao_logica"
+	"id -> 300
+token -> expressao_simples"
+	"id -> 301
+token -> expressao_logica" -> "id -> 300
+token -> expressao_simples"
+	"id -> 299
+token -> expressao_aditiva"
+	"id -> 300
+token -> expressao_simples" -> "id -> 299
+token -> expressao_aditiva"
+	"id -> 298
+token -> expressao_multiplicativa"
+	"id -> 299
+token -> expressao_aditiva" -> "id -> 298
+token -> expressao_multiplicativa"
+	"id -> 297
+token -> expressao_unaria"
+	"id -> 298
+token -> expressao_multiplicativa" -> "id -> 297
+token -> expressao_unaria"
+	"id -> 296
+token -> fator"
+	"id -> 297
+token -> expressao_unaria" -> "id -> 296
+token -> fator"
+	"id -> 295
+token -> chamada_funcao"
+	"id -> 296
+token -> fator" -> "id -> 295
+token -> chamada_funcao"
+	"285_identificador -> retorno"
+	"id -> 295
+token -> chamada_funcao" -> "285_identificador -> retorno"
+	"id -> 294
+token -> lista_argumentos"
+	"id -> 295
+token -> chamada_funcao" -> "id -> 294
+token -> lista_argumentos"
+	"id -> 293
+token -> expressao"
+	"id -> 294
+token -> lista_argumentos" -> "id -> 293
+token -> expressao"
+	"id -> 292
+token -> expressao_logica"
+	"id -> 293
+token -> expressao" -> "id -> 292
+token -> expressao_logica"
+	"id -> 291
+token -> expressao_simples"
+	"id -> 292
+token -> expressao_logica" -> "id -> 291
+token -> expressao_simples"
+	"id -> 290
+token -> expressao_aditiva"
+	"id -> 291
+token -> expressao_simples" -> "id -> 290
+token -> expressao_aditiva"
+	"id -> 289
+token -> expressao_multiplicativa"
+	"id -> 290
+token -> expressao_aditiva" -> "id -> 289
+token -> expressao_multiplicativa"
+	"id -> 288
+token -> expressao_unaria"
+	"id -> 289
+token -> expressao_multiplicativa" -> "id -> 288
+token -> expressao_unaria"
+	"id -> 287
+token -> fator"
+	"id -> 288
+token -> expressao_unaria" -> "id -> 287
+token -> fator"
+	"286_numero -> 0"
+	"id -> 287
+token -> fator" -> "286_numero -> 0"
+}

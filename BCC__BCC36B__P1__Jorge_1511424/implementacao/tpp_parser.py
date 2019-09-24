@@ -1,25 +1,22 @@
 import ply.yacc as yacc
-from graphviz import Digraph
 from tpp_lexer import TppLexer
-
-#g = Node('A', [Node('B', [Node('C', [], 1), Node('D', [], 2)], 444)])
+from graphviz import Digraph
 
 
 class Node:
+    counter = 0
+
     def __init__(self, type, children=[], value=None):
         self.type = type
         self.children = children
         self.value = value
-
-    def print(self, indent):
-        print(indent * ' ' + str(self))
-
-        for child in self.children:
-            if isinstance(child, Node):
-                child.print(indent + 1)
+        self.id = Node.counter
+        Node.counter += 1
 
     def __str__(self):
-        return '[tipo: {}    valor: {}]'.format(self.type, self.value)
+        if self.value is None:
+            return 'id -> {}\ntoken -> {}'.format(self.id, self.type)
+        return '{}_{} -> {}'.format(self.id, self.type, self.value)
 
 
 class TppParser():
@@ -28,7 +25,7 @@ class TppParser():
     def __init__(self, **kwargs):
         self.lexer = TppLexer()
         self.parser = yacc.yacc(module=self, **kwargs)
-        self.graph = Digraph()
+        self.graph = Digraph(comment='Análise sintática')
 
     def p_programa(self, p):
         '''programa : lista_declaracoes'''
@@ -64,9 +61,13 @@ class TppParser():
         else:
             p[0] = Node('lista_variaveis', [p[1]])
 
+    def p_identificador(self, p):
+        '''identificador : ID'''
+        p[0] = Node('identificador', [], p[1])
+
     def p_var(self, p):
-        '''var : ID
-               | ID indice'''
+        '''var : identificador
+               | identificador indice'''
 
         if len(p) == 2:
             p[0] = Node('var', [p[1]])
@@ -95,7 +96,7 @@ class TppParser():
             p[0] = Node('declaracao_funcao', [p[1]])
 
     def p_cabecalho(self, p):
-        '''cabecalho : ID ABRE_PAR lista_parametros FECHA_PAR corpo FIM'''
+        '''cabecalho : identificador ABRE_PAR lista_parametros FECHA_PAR corpo FIM'''
         p[0] = Node('cabecalho', [p[1], p[3], p[5]])
 
     def p_lista_parametros(self, p):
@@ -108,7 +109,7 @@ class TppParser():
             p[0] = Node('lista_parametro', [p[1]])
 
     def p_parametro_1(self, p):
-        '''parametro : tipo DOIS_PONTOS ID'''
+        '''parametro : tipo DOIS_PONTOS identificador'''
         p[0] = Node('parametro', [p[1], p[3]])
 
     def p_parametro_2(self, p):
@@ -253,7 +254,7 @@ class TppParser():
         p[0] = Node('numero', [], p[1])
 
     def p_chamada_funcao(self, p):
-        '''chamada_funcao : ID ABRE_PAR lista_argumentos FECHA_PAR'''
+        '''chamada_funcao : identificador ABRE_PAR lista_argumentos FECHA_PAR'''
         p[0] = Node('chamada_funcao', [p[1], p[3]])
 
     def p_lista_argumentos(self, p):
@@ -277,12 +278,18 @@ class TppParser():
     def input_data(self, data):
         self.result = self.parser.parse(data)
 
-    def print_result(self):
-        self.result.print(0)
-
     def build_graph(self):
+        def traverse(root, i):
+            if root is not None:
+                for child in root.children:
+                    if child is None:
+                        continue
+                    self.graph.node(str(child))
+                    self.graph.edge(str(root), str(child))
+                    if isinstance(child, Node):
+                        traverse(child, i+1)
 
-        def traverse(node):
-            for child in node.children:
-                if isinstance(child, Node):
-                    child.print(indent + 1)
+        self.graph.node(str(self.result))
+        traverse(self.result, 0)
+
+        self.graph.render()
