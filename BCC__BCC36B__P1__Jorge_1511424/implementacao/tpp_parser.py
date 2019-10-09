@@ -21,7 +21,7 @@ class TppParser():
 
     def __init__(self, **kwargs):
         self.lexer = TppLexer()
-        self.parser = yacc.yacc(module=self, **kwargs)
+        self.parser = yacc.yacc(module=self, debug=True, **kwargs)
         self.graph = Digraph(comment='Análise sintática')
 
     def p_programa(self, p):
@@ -268,8 +268,17 @@ class TppParser():
         '''vazio :'''
         pass
 
+    def p_error(self, p):
+        print('Erro de sintaxe ({}) na linha {}, coluna {}'.format(
+            p.type, p.lineno, self.find_column(self.input, p)))
+
     def input_data(self, data):
+        self.input = data
         self.result = self.parser.parse(data)
+
+    def find_column(self, input, token):
+        line_start = input.rfind('\n', 0, token.lexpos) + 1
+        return (token.lexpos - line_start) + 1
 
     def build_graph(self):
         def traverse(root, i):

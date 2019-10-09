@@ -1,1470 +1,1035 @@
 // Análise sintática
 digraph {
-	"293
+	"206
 programa"
-	"292
+	"205
 lista_declaracoes"
-	"293
-programa" -> "292
+	"206
+programa" -> "205
 lista_declaracoes"
-	"161
+	"157
 lista_declaracoes"
-	"292
-lista_declaracoes" -> "161
+	"205
+lista_declaracoes" -> "157
 lista_declaracoes"
-	"35
+	"7
 lista_declaracoes"
-	"161
-lista_declaracoes" -> "35
+	"157
+lista_declaracoes" -> "7
 lista_declaracoes"
-	"17
-lista_declaracoes"
-	"35
-lista_declaracoes" -> "17
-lista_declaracoes"
-	"16
+	"6
 declaracao"
-	"17
-lista_declaracoes" -> "16
+	"7
+lista_declaracoes" -> "6
 declaracao"
-	"15
+	"5
 declaracao_variaveis"
-	"16
-declaracao" -> "15
+	"6
+declaracao" -> "5
 declaracao_variaveis"
 	"1
 tipo"
-	"15
+	"5
 declaracao_variaveis" -> "1
 tipo"
 	"0
-flutuante"
+inteiro"
 	"1
 tipo" -> "0
-flutuante"
-	"14
-lista_variaveis"
-	"15
-declaracao_variaveis" -> "14
-lista_variaveis"
-	"13
-var"
-	"14
-lista_variaveis" -> "13
-var"
-	"12
-V"
-	"13
-var" -> "12
-V"
-	"11
-indice"
-	"13
-var" -> "11
-indice"
-	"10
-expressao"
-	"11
-indice" -> "10
-expressao"
-	"9
-expressao_logica"
-	"10
-expressao" -> "9
-expressao_logica"
-	"8
-expressao_simples"
-	"9
-expressao_logica" -> "8
-expressao_simples"
-	"7
-expressao_aditiva"
-	"8
-expressao_simples" -> "7
-expressao_aditiva"
-	"6
-expressao_multiplicativa"
-	"7
-expressao_aditiva" -> "6
-expressao_multiplicativa"
-	"5
-expressao_unaria"
-	"6
-expressao_multiplicativa" -> "5
-expressao_unaria"
+inteiro"
 	"4
-fator"
+lista_variaveis"
 	"5
-expressao_unaria" -> "4
-fator"
+declaracao_variaveis" -> "4
+lista_variaveis"
 	"3
-numero"
+var"
 	"4
-fator" -> "3
-numero"
+lista_variaveis" -> "3
+var"
 	"2
-100"
+n"
 	"3
-numero" -> "2
-100"
-	"34
+var" -> "2
+n"
+	"156
 declaracao"
-	"35
-lista_declaracoes" -> "34
-declaracao"
-	"33
-declaracao_variaveis"
-	"34
-declaracao" -> "33
-declaracao_variaveis"
-	"19
-tipo"
-	"33
-declaracao_variaveis" -> "19
-tipo"
-	"18
-flutuante"
-	"19
-tipo" -> "18
-flutuante"
-	"32
-lista_variaveis"
-	"33
-declaracao_variaveis" -> "32
-lista_variaveis"
-	"31
-var"
-	"32
-lista_variaveis" -> "31
-var"
-	"30
-V2"
-	"31
-var" -> "30
-V2"
-	"29
-indice"
-	"31
-var" -> "29
-indice"
-	"28
-expressao"
-	"29
-indice" -> "28
-expressao"
-	"27
-expressao_logica"
-	"28
-expressao" -> "27
-expressao_logica"
-	"26
-expressao_simples"
-	"27
-expressao_logica" -> "26
-expressao_simples"
-	"25
-expressao_aditiva"
-	"26
-expressao_simples" -> "25
-expressao_aditiva"
-	"24
-expressao_multiplicativa"
-	"25
-expressao_aditiva" -> "24
-expressao_multiplicativa"
-	"23
-expressao_unaria"
-	"24
-expressao_multiplicativa" -> "23
-expressao_unaria"
-	"22
-fator"
-	"23
-expressao_unaria" -> "22
-fator"
-	"21
-numero"
-	"22
-fator" -> "21
-numero"
-	"20
-100"
-	"21
-numero" -> "20
-100"
-	"160
-declaracao"
-	"161
-lista_declaracoes" -> "160
-declaracao"
-	"159
-declaracao_funcao"
-	"160
-declaracao" -> "159
-declaracao_funcao"
-	"158
-cabecalho"
-	"159
-declaracao_funcao" -> "158
-cabecalho"
 	"157
-multivet"
-	"158
-cabecalho" -> "157
-multivet"
-	"40
-lista_parametro"
-	"158
-cabecalho" -> "40
-lista_parametro"
-	"39
-parametro"
-	"40
-lista_parametro" -> "39
-parametro"
-	"37
-tipo"
-	"39
-parametro" -> "37
-tipo"
-	"36
-inteiro"
-	"37
-tipo" -> "36
-inteiro"
-	"38
-t"
-	"39
-parametro" -> "38
-t"
+lista_declaracoes" -> "156
+declaracao"
+	"155
+declaracao_funcao"
 	"156
+declaracao" -> "155
+declaracao_funcao"
+	"9
+tipo"
+	"155
+declaracao_funcao" -> "9
+tipo"
+	"8
+inteiro"
+	"9
+tipo" -> "8
+inteiro"
+	"154
+cabecalho"
+	"155
+declaracao_funcao" -> "154
+cabecalho"
+	"153
+fatorial"
+	"154
+cabecalho" -> "153
+fatorial"
+	"14
+lista_parametro"
+	"154
+cabecalho" -> "14
+lista_parametro"
+	"13
+parametro"
+	"14
+lista_parametro" -> "13
+parametro"
+	"11
+tipo"
+	"13
+parametro" -> "11
+tipo"
+	"10
+inteiro"
+	"11
+tipo" -> "10
+inteiro"
+	"12
+n"
+	"13
+parametro" -> "12
+n"
+	"152
 corpo"
-	"158
-cabecalho" -> "156
+	"154
+cabecalho" -> "152
 corpo"
-	"64
+	"23
 corpo"
-	"156
-corpo" -> "64
+	"152
+corpo" -> "23
 corpo"
-	"49
+	"15
 corpo"
-	"64
-corpo" -> "49
+	"23
+corpo" -> "15
 corpo"
+	"22
+acao"
+	"23
+corpo" -> "22
+acao"
+	"21
+declaracao_variaveis"
+	"22
+acao" -> "21
+declaracao_variaveis"
+	"17
+tipo"
+	"21
+declaracao_variaveis" -> "17
+tipo"
+	"16
+inteiro"
+	"17
+tipo" -> "16
+inteiro"
+	"20
+lista_variaveis"
+	"21
+declaracao_variaveis" -> "20
+lista_variaveis"
+	"19
+var"
+	"20
+lista_variaveis" -> "19
+var"
+	"18
+fat"
+	"19
+var" -> "18
+fat"
+	"151
+acao"
+	"152
+corpo" -> "151
+acao"
+	"150
+se"
+	"151
+acao" -> "150
+se"
 	"41
+expressao"
+	"150
+se" -> "41
+expressao"
+	"40
+expressao_logica"
+	"41
+expressao" -> "40
+expressao_logica"
+	"39
+expressao_simples"
+	"40
+expressao_logica" -> "39
+expressao_simples"
+	"30
+expressao_simples"
+	"39
+expressao_simples" -> "30
+expressao_simples"
+	"29
+expressao_aditiva"
+	"30
+expressao_simples" -> "29
+expressao_aditiva"
+	"28
+expressao_multiplicativa"
+	"29
+expressao_aditiva" -> "28
+expressao_multiplicativa"
+	"27
+expressao_unaria"
+	"28
+expressao_multiplicativa" -> "27
+expressao_unaria"
+	"26
+fator"
+	"27
+expressao_unaria" -> "26
+fator"
+	"25
+var"
+	"26
+fator" -> "25
+var"
+	"24
+n"
+	"25
+var" -> "24
+n"
+	"32
+operador_relacional"
+	"39
+expressao_simples" -> "32
+operador_relacional"
+	"31
+>"
+	"32
+operador_relacional" -> "31
+>"
+	"38
+expressao_aditiva"
+	"39
+expressao_simples" -> "38
+expressao_aditiva"
+	"37
+expressao_multiplicativa"
+	"38
+expressao_aditiva" -> "37
+expressao_multiplicativa"
+	"36
+expressao_unaria"
+	"37
+expressao_multiplicativa" -> "36
+expressao_unaria"
+	"35
+fator"
+	"36
+expressao_unaria" -> "35
+fator"
+	"34
+numero"
+	"35
+fator" -> "34
+numero"
+	"33
+0"
+	"34
+numero" -> "33
+0"
+	"136
 corpo"
-	"49
-corpo" -> "41
+	"150
+se" -> "136
 corpo"
-	"48
-acao"
-	"49
-corpo" -> "48
-acao"
-	"47
-declaracao_variaveis"
-	"48
-acao" -> "47
-declaracao_variaveis"
-	"43
-tipo"
-	"47
-declaracao_variaveis" -> "43
-tipo"
+	"124
+corpo"
+	"136
+corpo" -> "124
+corpo"
+	"57
+corpo"
+	"124
+corpo" -> "57
+corpo"
 	"42
-inteiro"
-	"43
-tipo" -> "42
-inteiro"
-	"46
-lista_variaveis"
-	"47
-declaracao_variaveis" -> "46
-lista_variaveis"
-	"45
-var"
-	"46
-lista_variaveis" -> "45
-var"
+corpo"
+	"57
+corpo" -> "42
+corpo"
+	"56
+acao"
+	"57
+corpo" -> "56
+acao"
+	"55
+expressao"
+	"56
+acao" -> "55
+expressao"
+	"54
+atribuicao"
+	"55
+expressao" -> "54
+atribuicao"
 	"44
-i"
-	"45
-var" -> "44
-i"
-	"63
-acao"
-	"64
-corpo" -> "63
-acao"
-	"62
-expressao"
-	"63
-acao" -> "62
-expressao"
-	"61
-atribuicao"
-	"62
-expressao" -> "61
-atribuicao"
-	"51
 var"
-	"61
-atribuicao" -> "51
-var"
-	"50
-i"
-	"51
-var" -> "50
-i"
-	"60
-expressao"
-	"61
-atribuicao" -> "60
-expressao"
-	"59
-expressao_logica"
-	"60
-expressao" -> "59
-expressao_logica"
-	"58
-expressao_simples"
-	"59
-expressao_logica" -> "58
-expressao_simples"
-	"57
-expressao_aditiva"
-	"58
-expressao_simples" -> "57
-expressao_aditiva"
-	"56
-expressao_multiplicativa"
-	"57
-expressao_aditiva" -> "56
-expressao_multiplicativa"
-	"55
-expressao_unaria"
-	"56
-expressao_multiplicativa" -> "55
-expressao_unaria"
 	"54
-fator"
-	"55
-expressao_unaria" -> "54
-fator"
+atribuicao" -> "44
+var"
+	"43
+fat"
+	"44
+var" -> "43
+fat"
 	"53
-numero"
+expressao"
 	"54
-fator" -> "53
-numero"
+atribuicao" -> "53
+expressao"
 	"52
-0"
+expressao_logica"
 	"53
-numero" -> "52
-0"
-	"155
-acao"
-	"156
-corpo" -> "155
-acao"
-	"154
-repita"
-	"155
-acao" -> "154
-repita"
-	"135
-corpo"
-	"154
-repita" -> "135
-corpo"
-	"112
-corpo"
-	"135
-corpo" -> "112
-corpo"
-	"65
-corpo"
-	"112
-corpo" -> "65
-corpo"
-	"111
-acao"
-	"112
-corpo" -> "111
-acao"
-	"110
-expressao"
-	"111
-acao" -> "110
-expressao"
-	"109
+expressao" -> "52
 expressao_logica"
-	"110
-expressao" -> "109
-expressao_logica"
-	"108
+	"51
 expressao_simples"
-	"109
-expressao_logica" -> "108
+	"52
+expressao_logica" -> "51
 expressao_simples"
-	"82
-expressao_simples"
-	"108
-expressao_simples" -> "82
-expressao_simples"
-	"81
+	"50
 expressao_aditiva"
-	"82
-expressao_simples" -> "81
+	"51
+expressao_simples" -> "50
 expressao_aditiva"
+	"49
+expressao_multiplicativa"
+	"50
+expressao_aditiva" -> "49
+expressao_multiplicativa"
+	"48
+expressao_unaria"
+	"49
+expressao_multiplicativa" -> "48
+expressao_unaria"
+	"47
+fator"
+	"48
+expressao_unaria" -> "47
+fator"
+	"46
+numero"
+	"47
+fator" -> "46
+numero"
+	"45
+1"
+	"46
+numero" -> "45
+1"
+	"123
+acao"
+	"124
+corpo" -> "123
+acao"
+	"122
+repita"
+	"123
+acao" -> "122
+repita"
+	"103
+corpo"
+	"122
+repita" -> "103
+corpo"
 	"80
-expressao_multiplicativa"
-	"81
-expressao_aditiva" -> "80
-expressao_multiplicativa"
+corpo"
+	"103
+corpo" -> "80
+corpo"
+	"58
+corpo"
+	"80
+corpo" -> "58
+corpo"
 	"79
-expressao_unaria"
+acao"
 	"80
-expressao_multiplicativa" -> "79
-expressao_unaria"
+corpo" -> "79
+acao"
 	"78
-fator"
+expressao"
 	"79
-expressao_unaria" -> "78
-fator"
+acao" -> "78
+expressao"
 	"77
-var"
+atribuicao"
 	"78
-fator" -> "77
+expressao" -> "77
+atribuicao"
+	"60
 var"
+	"77
+atribuicao" -> "60
+var"
+	"59
+fat"
+	"60
+var" -> "59
+fat"
 	"76
-V2"
+expressao"
 	"77
-var" -> "76
-V2"
-	"75
-indice"
-	"77
-var" -> "75
-indice"
-	"74
+atribuicao" -> "76
 expressao"
 	"75
-indice" -> "74
-expressao"
-	"73
+expressao_logica"
+	"76
+expressao" -> "75
 expressao_logica"
 	"74
-expressao" -> "73
-expressao_logica"
-	"72
+expressao_simples"
+	"75
+expressao_logica" -> "74
 expressao_simples"
 	"73
-expressao_logica" -> "72
-expressao_simples"
-	"71
+expressao_aditiva"
+	"74
+expressao_simples" -> "73
 expressao_aditiva"
 	"72
-expressao_simples" -> "71
-expressao_aditiva"
-	"70
 expressao_multiplicativa"
-	"71
-expressao_aditiva" -> "70
+	"73
+expressao_aditiva" -> "72
 expressao_multiplicativa"
-	"69
+	"65
+expressao_multiplicativa"
+	"72
+expressao_multiplicativa" -> "65
+expressao_multiplicativa"
+	"64
 expressao_unaria"
-	"70
-expressao_multiplicativa" -> "69
+	"65
+expressao_multiplicativa" -> "64
 expressao_unaria"
-	"68
+	"63
 fator"
-	"69
-expressao_unaria" -> "68
+	"64
+expressao_unaria" -> "63
 fator"
+	"62
+var"
+	"63
+fator" -> "62
+var"
+	"61
+fat"
+	"62
+var" -> "61
+fat"
 	"67
-var"
-	"68
-fator" -> "67
-var"
+operador_multiplicacao"
+	"72
+expressao_multiplicativa" -> "67
+operador_multiplicacao"
 	"66
-i"
+*"
 	"67
-var" -> "66
-i"
-	"84
-operador_relacional"
-	"108
-expressao_simples" -> "84
-operador_relacional"
-	"83
-="
-	"84
-operador_relacional" -> "83
-="
-	"107
-expressao_aditiva"
-	"108
-expressao_simples" -> "107
-expressao_aditiva"
-	"106
-expressao_multiplicativa"
-	"107
-expressao_aditiva" -> "106
-expressao_multiplicativa"
-	"99
-expressao_multiplicativa"
-	"106
-expressao_multiplicativa" -> "99
-expressao_multiplicativa"
-	"98
+operador_multiplicacao" -> "66
+*"
+	"71
 expressao_unaria"
-	"99
-expressao_multiplicativa" -> "98
+	"72
+expressao_multiplicativa" -> "71
 expressao_unaria"
-	"97
+	"70
 fator"
+	"71
+expressao_unaria" -> "70
+fator"
+	"69
+var"
+	"70
+fator" -> "69
+var"
+	"68
+n"
+	"69
+var" -> "68
+n"
+	"102
+acao"
+	"103
+corpo" -> "102
+acao"
+	"101
+expressao"
+	"102
+acao" -> "101
+expressao"
+	"100
+atribuicao"
+	"101
+expressao" -> "100
+atribuicao"
+	"82
+var"
+	"100
+atribuicao" -> "82
+var"
+	"81
+n"
+	"82
+var" -> "81
+n"
+	"99
+expressao"
+	"100
+atribuicao" -> "99
+expressao"
 	"98
-expressao_unaria" -> "97
-fator"
-	"96
-var"
+expressao_logica"
+	"99
+expressao" -> "98
+expressao_logica"
 	"97
-fator" -> "96
-var"
-	"95
-V"
-	"96
-var" -> "95
-V"
-	"94
-indice"
-	"96
-var" -> "94
-indice"
-	"93
-expressao"
-	"94
-indice" -> "93
-expressao"
-	"92
-expressao_logica"
-	"93
-expressao" -> "92
-expressao_logica"
-	"91
 expressao_simples"
-	"92
-expressao_logica" -> "91
+	"98
+expressao_logica" -> "97
 expressao_simples"
-	"90
+	"96
 expressao_aditiva"
-	"91
-expressao_simples" -> "90
+	"97
+expressao_simples" -> "96
 expressao_aditiva"
-	"89
-expressao_multiplicativa"
-	"90
-expressao_aditiva" -> "89
+	"88
+expressao_aditiva"
+	"96
+expressao_aditiva" -> "88
+expressao_aditiva"
+	"87
 expressao_multiplicativa"
 	"88
-expressao_unaria"
-	"89
-expressao_multiplicativa" -> "88
+expressao_aditiva" -> "87
+expressao_multiplicativa"
+	"86
 expressao_unaria"
 	"87
-fator"
-	"88
-expressao_unaria" -> "87
+expressao_multiplicativa" -> "86
+expressao_unaria"
+	"85
 fator"
 	"86
-var"
-	"87
-fator" -> "86
+expressao_unaria" -> "85
+fator"
+	"84
 var"
 	"85
-i"
-	"86
-var" -> "85
-i"
-	"101
-operador_multiplicacao"
-	"106
-expressao_multiplicativa" -> "101
-operador_multiplicacao"
-	"100
-*"
-	"101
-operador_multiplicacao" -> "100
-*"
-	"105
+fator" -> "84
+var"
+	"83
+n"
+	"84
+var" -> "83
+n"
+	"90
+operador_soma"
+	"96
+expressao_aditiva" -> "90
+operador_soma"
+	"89
+-"
+	"90
+operador_soma" -> "89
+-"
+	"95
+expressao_multiplicativa"
+	"96
+expressao_aditiva" -> "95
+expressao_multiplicativa"
+	"94
+expressao_unaria"
+	"95
+expressao_multiplicativa" -> "94
+expressao_unaria"
+	"93
+fator"
+	"94
+expressao_unaria" -> "93
+fator"
+	"92
+numero"
+	"93
+fator" -> "92
+numero"
+	"91
+1"
+	"92
+numero" -> "91
+1"
+	"121
+expressao"
+	"122
+repita" -> "121
+expressao"
+	"120
+expressao_logica"
+	"121
+expressao" -> "120
+expressao_logica"
+	"119
+expressao_simples"
+	"120
+expressao_logica" -> "119
+expressao_simples"
+	"110
+expressao_simples"
+	"119
+expressao_simples" -> "110
+expressao_simples"
+	"109
+expressao_aditiva"
+	"110
+expressao_simples" -> "109
+expressao_aditiva"
+	"108
+expressao_multiplicativa"
+	"109
+expressao_aditiva" -> "108
+expressao_multiplicativa"
+	"107
+expressao_unaria"
+	"108
+expressao_multiplicativa" -> "107
 expressao_unaria"
 	"106
-expressao_multiplicativa" -> "105
-expressao_unaria"
-	"104
+fator"
+	"107
+expressao_unaria" -> "106
 fator"
 	"105
-expressao_unaria" -> "104
-fator"
-	"103
-numero"
+var"
+	"106
+fator" -> "105
+var"
 	"104
-fator" -> "103
+n"
+	"105
+var" -> "104
+n"
+	"112
+operador_relacional"
+	"119
+expressao_simples" -> "112
+operador_relacional"
+	"111
+="
+	"112
+operador_relacional" -> "111
+="
+	"118
+expressao_aditiva"
+	"119
+expressao_simples" -> "118
+expressao_aditiva"
+	"117
+expressao_multiplicativa"
+	"118
+expressao_aditiva" -> "117
+expressao_multiplicativa"
+	"116
+expressao_unaria"
+	"117
+expressao_multiplicativa" -> "116
+expressao_unaria"
+	"115
+fator"
+	"116
+expressao_unaria" -> "115
+fator"
+	"114
 numero"
-	"102
-2"
-	"103
-numero" -> "102
-2"
-	"134
-acao"
+	"115
+fator" -> "114
+numero"
+	"113
+0"
+	"114
+numero" -> "113
+0"
 	"135
-corpo" -> "134
 acao"
+	"136
+corpo" -> "135
+acao"
+	"134
+retorna"
+	"135
+acao" -> "134
+retorna"
 	"133
 expressao"
 	"134
-acao" -> "133
+retorna" -> "133
 expressao"
 	"132
-atribuicao"
+expressao_logica"
 	"133
 expressao" -> "132
-atribuicao"
-	"114
-var"
-	"132
-atribuicao" -> "114
-var"
-	"113
-i"
-	"114
-var" -> "113
-i"
-	"131
-expressao"
-	"132
-atribuicao" -> "131
-expressao"
-	"130
 expressao_logica"
 	"131
-expressao" -> "130
-expressao_logica"
-	"129
+expressao_simples"
+	"132
+expressao_logica" -> "131
 expressao_simples"
 	"130
-expressao_logica" -> "129
-expressao_simples"
-	"128
+expressao_aditiva"
+	"131
+expressao_simples" -> "130
 expressao_aditiva"
 	"129
-expressao_simples" -> "128
-expressao_aditiva"
-	"120
-expressao_aditiva"
+expressao_multiplicativa"
+	"130
+expressao_aditiva" -> "129
+expressao_multiplicativa"
 	"128
-expressao_aditiva" -> "120
-expressao_aditiva"
-	"119
-expressao_multiplicativa"
-	"120
-expressao_aditiva" -> "119
-expressao_multiplicativa"
-	"118
 expressao_unaria"
-	"119
-expressao_multiplicativa" -> "118
-expressao_unaria"
-	"117
-fator"
-	"118
-expressao_unaria" -> "117
-fator"
-	"116
-var"
-	"117
-fator" -> "116
-var"
-	"115
-i"
-	"116
-var" -> "115
-i"
-	"122
-operador_soma"
-	"128
-expressao_aditiva" -> "122
-operador_soma"
-	"121
-+"
-	"122
-operador_soma" -> "121
-+"
-	"127
-expressao_multiplicativa"
-	"128
-expressao_aditiva" -> "127
-expressao_multiplicativa"
-	"126
+	"129
+expressao_multiplicativa" -> "128
 expressao_unaria"
 	"127
-expressao_multiplicativa" -> "126
-expressao_unaria"
-	"125
+fator"
+	"128
+expressao_unaria" -> "127
 fator"
 	"126
-expressao_unaria" -> "125
-fator"
-	"124
-numero"
+var"
+	"127
+fator" -> "126
+var"
 	"125
-fator" -> "124
-numero"
-	"123
-1"
-	"124
-numero" -> "123
-1"
-	"153
-expressao"
-	"154
-repita" -> "153
-expressao"
-	"152
-expressao_logica"
-	"153
-expressao" -> "152
-expressao_logica"
-	"151
-expressao_simples"
-	"152
-expressao_logica" -> "151
-expressao_simples"
-	"142
-expressao_simples"
-	"151
-expressao_simples" -> "142
-expressao_simples"
-	"141
-expressao_aditiva"
-	"142
-expressao_simples" -> "141
-expressao_aditiva"
-	"140
-expressao_multiplicativa"
-	"141
-expressao_aditiva" -> "140
-expressao_multiplicativa"
-	"139
-expressao_unaria"
-	"140
-expressao_multiplicativa" -> "139
-expressao_unaria"
-	"138
-fator"
-	"139
-expressao_unaria" -> "138
-fator"
-	"137
-var"
-	"138
-fator" -> "137
-var"
-	"136
-i"
-	"137
-var" -> "136
-i"
-	"144
-operador_relacional"
-	"151
-expressao_simples" -> "144
-operador_relacional"
-	"143
-="
-	"144
-operador_relacional" -> "143
-="
-	"150
-expressao_aditiva"
-	"151
-expressao_simples" -> "150
-expressao_aditiva"
+fat"
+	"126
+var" -> "125
+fat"
 	"149
-expressao_multiplicativa"
+corpo"
 	"150
-expressao_aditiva" -> "149
-expressao_multiplicativa"
+se" -> "149
+corpo"
+	"137
+corpo"
+	"149
+corpo" -> "137
+corpo"
 	"148
-expressao_unaria"
+acao"
 	"149
-expressao_multiplicativa" -> "148
-expressao_unaria"
+corpo" -> "148
+acao"
 	"147
-fator"
+retorna"
 	"148
-expressao_unaria" -> "147
-fator"
+acao" -> "147
+retorna"
 	"146
-var"
+expressao"
 	"147
-fator" -> "146
-var"
+retorna" -> "146
+expressao"
 	"145
-t"
+expressao_logica"
 	"146
-var" -> "145
-t"
-	"291
+expressao" -> "145
+expressao_logica"
+	"144
+expressao_simples"
+	"145
+expressao_logica" -> "144
+expressao_simples"
+	"143
+expressao_aditiva"
+	"144
+expressao_simples" -> "143
+expressao_aditiva"
+	"142
+expressao_multiplicativa"
+	"143
+expressao_aditiva" -> "142
+expressao_multiplicativa"
+	"141
+expressao_unaria"
+	"142
+expressao_multiplicativa" -> "141
+expressao_unaria"
+	"140
+fator"
+	"141
+expressao_unaria" -> "140
+fator"
+	"139
+numero"
+	"140
+fator" -> "139
+numero"
+	"138
+0"
+	"139
+numero" -> "138
+0"
+	"204
 declaracao"
-	"292
-lista_declaracoes" -> "291
+	"205
+lista_declaracoes" -> "204
 declaracao"
-	"290
+	"203
 declaracao_funcao"
-	"291
-declaracao" -> "290
+	"204
+declaracao" -> "203
 declaracao_funcao"
-	"163
+	"159
 tipo"
-	"290
-declaracao_funcao" -> "163
+	"203
+declaracao_funcao" -> "159
 tipo"
-	"162
+	"158
 inteiro"
-	"163
-tipo" -> "162
+	"159
+tipo" -> "158
 inteiro"
-	"289
+	"202
 cabecalho"
-	"290
-declaracao_funcao" -> "289
+	"203
+declaracao_funcao" -> "202
 cabecalho"
-	"288
+	"201
 principal"
-	"289
-cabecalho" -> "288
+	"202
+cabecalho" -> "201
 principal"
-	"164
+	"160
 lista_parametro"
-	"289
-cabecalho" -> "164
+	"202
+cabecalho" -> "160
 lista_parametro"
-	"287
+	"200
 corpo"
-	"289
-cabecalho" -> "287
-corpo"
-	"266
-corpo"
-	"287
-corpo" -> "266
+	"202
+cabecalho" -> "200
 corpo"
 	"188
 corpo"
-	"266
+	"200
 corpo" -> "188
 corpo"
-	"173
+	"166
 corpo"
 	"188
-corpo" -> "173
+corpo" -> "166
+corpo"
+	"161
+corpo"
+	"166
+corpo" -> "161
 corpo"
 	"165
-corpo"
-	"173
-corpo" -> "165
-corpo"
-	"172
 acao"
-	"173
-corpo" -> "172
-acao"
-	"171
-declaracao_variaveis"
-	"172
-acao" -> "171
-declaracao_variaveis"
-	"167
-tipo"
-	"171
-declaracao_variaveis" -> "167
-tipo"
 	"166
-inteiro"
-	"167
-tipo" -> "166
-inteiro"
-	"170
-lista_variaveis"
-	"171
-declaracao_variaveis" -> "170
-lista_variaveis"
-	"169
+corpo" -> "165
+acao"
+	"164
+leia"
+	"165
+acao" -> "164
+leia"
+	"163
 var"
-	"170
-lista_variaveis" -> "169
+	"164
+leia" -> "163
 var"
-	"168
-i"
-	"169
-var" -> "168
-i"
+	"162
+n"
+	"163
+var" -> "162
+n"
 	"187
 acao"
 	"188
 corpo" -> "187
 acao"
 	"186
-expressao"
+escreva"
 	"187
 acao" -> "186
-expressao"
+escreva"
 	"185
-atribuicao"
+expressao"
 	"186
-expressao" -> "185
-atribuicao"
-	"175
-var"
-	"185
-atribuicao" -> "175
-var"
-	"174
-i"
-	"175
-var" -> "174
-i"
+escreva" -> "185
+expressao"
 	"184
-expressao"
+expressao_logica"
 	"185
-atribuicao" -> "184
-expressao"
+expressao" -> "184
+expressao_logica"
 	"183
-expressao_logica"
+expressao_simples"
 	"184
-expressao" -> "183
-expressao_logica"
+expressao_logica" -> "183
+expressao_simples"
 	"182
-expressao_simples"
+expressao_aditiva"
 	"183
-expressao_logica" -> "182
-expressao_simples"
+expressao_simples" -> "182
+expressao_aditiva"
 	"181
-expressao_aditiva"
+expressao_multiplicativa"
 	"182
-expressao_simples" -> "181
-expressao_aditiva"
+expressao_aditiva" -> "181
+expressao_multiplicativa"
 	"180
-expressao_multiplicativa"
+expressao_unaria"
 	"181
-expressao_aditiva" -> "180
-expressao_multiplicativa"
+expressao_multiplicativa" -> "180
+expressao_unaria"
 	"179
-expressao_unaria"
+fator"
 	"180
-expressao_multiplicativa" -> "179
-expressao_unaria"
+expressao_unaria" -> "179
+fator"
 	"178
-fator"
+chamada_funcao"
 	"179
-expressao_unaria" -> "178
-fator"
+fator" -> "178
+chamada_funcao"
 	"177
-numero"
+fatorial"
 	"178
-fator" -> "177
-numero"
+chamada_funcao" -> "177
+fatorial"
 	"176
-0"
-	"177
-numero" -> "176
-0"
-	"265
-acao"
-	"266
-corpo" -> "265
-acao"
-	"264
-repita"
-	"265
-acao" -> "264
-repita"
-	"245
-corpo"
-	"264
-repita" -> "245
-corpo"
-	"222
-corpo"
-	"245
-corpo" -> "222
-corpo"
-	"189
-corpo"
-	"222
-corpo" -> "189
-corpo"
-	"221
-acao"
-	"222
-corpo" -> "221
-acao"
-	"220
+lista_argumentos"
+	"178
+chamada_funcao" -> "176
+lista_argumentos"
+	"175
 expressao"
-	"221
-acao" -> "220
+	"176
+lista_argumentos" -> "175
 expressao"
-	"219
-atribuicao"
-	"220
-expressao" -> "219
-atribuicao"
-	"201
+	"174
+expressao_logica"
+	"175
+expressao" -> "174
+expressao_logica"
+	"173
+expressao_simples"
+	"174
+expressao_logica" -> "173
+expressao_simples"
+	"172
+expressao_aditiva"
+	"173
+expressao_simples" -> "172
+expressao_aditiva"
+	"171
+expressao_multiplicativa"
+	"172
+expressao_aditiva" -> "171
+expressao_multiplicativa"
+	"170
+expressao_unaria"
+	"171
+expressao_multiplicativa" -> "170
+expressao_unaria"
+	"169
+fator"
+	"170
+expressao_unaria" -> "169
+fator"
+	"168
 var"
-	"219
-atribuicao" -> "201
+	"169
+fator" -> "168
 var"
+	"167
+n"
+	"168
+var" -> "167
+n"
+	"199
+acao"
 	"200
-V"
-	"201
-var" -> "200
-V"
-	"199
-indice"
-	"201
-var" -> "199
-indice"
+corpo" -> "199
+acao"
 	"198
-expressao"
+retorna"
 	"199
-indice" -> "198
-expressao"
+acao" -> "198
+retorna"
 	"197
-expressao_logica"
+expressao"
 	"198
-expressao" -> "197
-expressao_logica"
+retorna" -> "197
+expressao"
 	"196
-expressao_simples"
+expressao_logica"
 	"197
-expressao_logica" -> "196
-expressao_simples"
+expressao" -> "196
+expressao_logica"
 	"195
-expressao_aditiva"
+expressao_simples"
 	"196
-expressao_simples" -> "195
-expressao_aditiva"
+expressao_logica" -> "195
+expressao_simples"
 	"194
-expressao_multiplicativa"
+expressao_aditiva"
 	"195
-expressao_aditiva" -> "194
-expressao_multiplicativa"
+expressao_simples" -> "194
+expressao_aditiva"
 	"193
-expressao_unaria"
+expressao_multiplicativa"
 	"194
-expressao_multiplicativa" -> "193
-expressao_unaria"
+expressao_aditiva" -> "193
+expressao_multiplicativa"
 	"192
-fator"
+expressao_unaria"
 	"193
-expressao_unaria" -> "192
-fator"
+expressao_multiplicativa" -> "192
+expressao_unaria"
 	"191
-var"
+fator"
 	"192
-fator" -> "191
-var"
+expressao_unaria" -> "191
+fator"
 	"190
-i"
+numero"
 	"191
-var" -> "190
-i"
-	"218
-expressao"
-	"219
-atribuicao" -> "218
-expressao"
-	"217
-expressao_logica"
-	"218
-expressao" -> "217
-expressao_logica"
-	"216
-expressao_simples"
-	"217
-expressao_logica" -> "216
-expressao_simples"
-	"215
-expressao_aditiva"
-	"216
-expressao_simples" -> "215
-expressao_aditiva"
-	"207
-expressao_aditiva"
-	"215
-expressao_aditiva" -> "207
-expressao_aditiva"
-	"206
-expressao_multiplicativa"
-	"207
-expressao_aditiva" -> "206
-expressao_multiplicativa"
-	"205
-expressao_unaria"
-	"206
-expressao_multiplicativa" -> "205
-expressao_unaria"
-	"204
-fator"
-	"205
-expressao_unaria" -> "204
-fator"
-	"203
-var"
-	"204
-fator" -> "203
-var"
-	"202
-i"
-	"203
-var" -> "202
-i"
-	"209
-operador_soma"
-	"215
-expressao_aditiva" -> "209
-operador_soma"
-	"208
-+"
-	"209
-operador_soma" -> "208
-+"
-	"214
-expressao_multiplicativa"
-	"215
-expressao_aditiva" -> "214
-expressao_multiplicativa"
-	"213
-expressao_unaria"
-	"214
-expressao_multiplicativa" -> "213
-expressao_unaria"
-	"212
-fator"
-	"213
-expressao_unaria" -> "212
-fator"
-	"211
+fator" -> "190
 numero"
-	"212
-fator" -> "211
-numero"
-	"210
-1"
-	"211
-numero" -> "210
-1"
-	"244
-acao"
-	"245
-corpo" -> "244
-acao"
-	"243
-expressao"
-	"244
-acao" -> "243
-expressao"
-	"242
-atribuicao"
-	"243
-expressao" -> "242
-atribuicao"
-	"224
-var"
-	"242
-atribuicao" -> "224
-var"
-	"223
-i"
-	"224
-var" -> "223
-i"
-	"241
-expressao"
-	"242
-atribuicao" -> "241
-expressao"
-	"240
-expressao_logica"
-	"241
-expressao" -> "240
-expressao_logica"
-	"239
-expressao_simples"
-	"240
-expressao_logica" -> "239
-expressao_simples"
-	"238
-expressao_aditiva"
-	"239
-expressao_simples" -> "238
-expressao_aditiva"
-	"230
-expressao_aditiva"
-	"238
-expressao_aditiva" -> "230
-expressao_aditiva"
-	"229
-expressao_multiplicativa"
-	"230
-expressao_aditiva" -> "229
-expressao_multiplicativa"
-	"228
-expressao_unaria"
-	"229
-expressao_multiplicativa" -> "228
-expressao_unaria"
-	"227
-fator"
-	"228
-expressao_unaria" -> "227
-fator"
-	"226
-var"
-	"227
-fator" -> "226
-var"
-	"225
-i"
-	"226
-var" -> "225
-i"
-	"232
-operador_soma"
-	"238
-expressao_aditiva" -> "232
-operador_soma"
-	"231
-+"
-	"232
-operador_soma" -> "231
-+"
-	"237
-expressao_multiplicativa"
-	"238
-expressao_aditiva" -> "237
-expressao_multiplicativa"
-	"236
-expressao_unaria"
-	"237
-expressao_multiplicativa" -> "236
-expressao_unaria"
-	"235
-fator"
-	"236
-expressao_unaria" -> "235
-fator"
-	"234
-numero"
-	"235
-fator" -> "234
-numero"
-	"233
-1"
-	"234
-numero" -> "233
-1"
-	"263
-expressao"
-	"264
-repita" -> "263
-expressao"
-	"262
-expressao_logica"
-	"263
-expressao" -> "262
-expressao_logica"
-	"261
-expressao_simples"
-	"262
-expressao_logica" -> "261
-expressao_simples"
-	"252
-expressao_simples"
-	"261
-expressao_simples" -> "252
-expressao_simples"
-	"251
-expressao_aditiva"
-	"252
-expressao_simples" -> "251
-expressao_aditiva"
-	"250
-expressao_multiplicativa"
-	"251
-expressao_aditiva" -> "250
-expressao_multiplicativa"
-	"249
-expressao_unaria"
-	"250
-expressao_multiplicativa" -> "249
-expressao_unaria"
-	"248
-fator"
-	"249
-expressao_unaria" -> "248
-fator"
-	"247
-var"
-	"248
-fator" -> "247
-var"
-	"246
-i"
-	"247
-var" -> "246
-i"
-	"254
-operador_relacional"
-	"261
-expressao_simples" -> "254
-operador_relacional"
-	"253
-="
-	"254
-operador_relacional" -> "253
-="
-	"260
-expressao_aditiva"
-	"261
-expressao_simples" -> "260
-expressao_aditiva"
-	"259
-expressao_multiplicativa"
-	"260
-expressao_aditiva" -> "259
-expressao_multiplicativa"
-	"258
-expressao_unaria"
-	"259
-expressao_multiplicativa" -> "258
-expressao_unaria"
-	"257
-fator"
-	"258
-expressao_unaria" -> "257
-fator"
-	"256
-numero"
-	"257
-fator" -> "256
-numero"
-	"255
-100"
-	"256
-numero" -> "255
-100"
-	"286
-acao"
-	"287
-corpo" -> "286
-acao"
-	"285
-expressao"
-	"286
-acao" -> "285
-expressao"
-	"284
-expressao_logica"
-	"285
-expressao" -> "284
-expressao_logica"
-	"283
-expressao_simples"
-	"284
-expressao_logica" -> "283
-expressao_simples"
-	"282
-expressao_aditiva"
-	"283
-expressao_simples" -> "282
-expressao_aditiva"
-	"281
-expressao_multiplicativa"
-	"282
-expressao_aditiva" -> "281
-expressao_multiplicativa"
-	"280
-expressao_unaria"
-	"281
-expressao_multiplicativa" -> "280
-expressao_unaria"
-	"279
-fator"
-	"280
-expressao_unaria" -> "279
-fator"
-	"278
-chamada_funcao"
-	"279
-fator" -> "278
-chamada_funcao"
-	"277
-multivet"
-	"278
-chamada_funcao" -> "277
-multivet"
-	"276
-lista_argumentos"
-	"278
-chamada_funcao" -> "276
-lista_argumentos"
-	"275
-expressao"
-	"276
-lista_argumentos" -> "275
-expressao"
-	"274
-expressao_logica"
-	"275
-expressao" -> "274
-expressao_logica"
-	"273
-expressao_simples"
-	"274
-expressao_logica" -> "273
-expressao_simples"
-	"272
-expressao_aditiva"
-	"273
-expressao_simples" -> "272
-expressao_aditiva"
-	"271
-expressao_multiplicativa"
-	"272
-expressao_aditiva" -> "271
-expressao_multiplicativa"
-	"270
-expressao_unaria"
-	"271
-expressao_multiplicativa" -> "270
-expressao_unaria"
-	"269
-fator"
-	"270
-expressao_unaria" -> "269
-fator"
-	"268
-numero"
-	"269
-fator" -> "268
-numero"
-	"267
-100"
-	"268
-numero" -> "267
-100"
+	"189
+0"
+	"190
+numero" -> "189
+0"
 }
