@@ -32,5 +32,5 @@ inteiro principal()
 
 	leia(n)
 	escreva(busca(n))
-	retorna(0)
+	retorno(0)
 fim

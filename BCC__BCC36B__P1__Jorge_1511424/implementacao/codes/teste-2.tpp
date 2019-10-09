@@ -29,3 +29,5 @@ inteiro principal()
 	leia(n)
 	escreva(fatorial(fatorial(1)))
 fim
+
+1+2
