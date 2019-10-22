@@ -278,7 +278,7 @@ class TppParser():
             print('Erro de sintaxe ({}) na linha {}, coluna {}'.format(
                 p.type, p.lineno, self.find_column(self.input, p)))
         except:
-            print('Erro de sintaxe.')
+            print('Erro de sintaxe. Verifique o fim do arquivo de código fonte.')
         exit(1)
 
     def input_data(self, data):

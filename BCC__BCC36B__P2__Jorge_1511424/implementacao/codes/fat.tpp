@@ -19,21 +19,3 @@ inteiro principal()
     escreva(fatorial(n))
     retorna(0)
 fim
-
-1.32e110
-
-1.32E-110
-
--1.32e110
-
-+1.32e110
-
-(1++2)
-+2
-
--3
-{}
-
-{
-    saf
-}
