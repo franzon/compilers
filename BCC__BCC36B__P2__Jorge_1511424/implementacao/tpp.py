@@ -5,13 +5,16 @@ import os
 import argparse
 # import lexer
 import tpp_parser
+import tpp_semantic
+import json
 
-parser = argparse.ArgumentParser(description='Compilador da linguagem TPP')
-parser.add_argument('source', type=str, help='Arquivo de entrada')
+# parser = argparse.ArgumentParser(description='Compilador da linguagem TPP')
+# parser.add_argument('source', type=str, help='Arquivo de entrada')
 
-args = parser.parse_args()
+# args = parser.parse_args()
 
-arq = open(args.source, 'r', encoding='utf-8')
+# arq = open(args.source, 'r', encoding='utf-8')
+arq = open('./codes/basic.tpp', 'r', encoding='utf-8')
 data = arq.read()
 arq.close()
 
@@ -23,3 +26,10 @@ arq.close()
 tppParser = tpp_parser.TppParser()
 tppParser.input_data(data)
 tppParser.build_graph()
+
+semantic = tpp_semantic.TppSemantic(tppParser.result)
+semantic.check()
+
+print('simbolos globais')
+for sym in semantic.global_symbols.keys():
+    print(semantic.global_symbols[sym])

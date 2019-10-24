@@ -13,7 +13,7 @@ class Node:
         Node.counter += 1
 
     def __str__(self):
-        return '{}\n{}'.format(self.id, self.value)
+        return '{} {}'.format(self.id, self.value)
 
 
 class TppParser():
@@ -104,7 +104,7 @@ class TppParser():
         if len(p) == 4:
             p[0] = Node('lista_parametros', [p[1], p[3]])
         else:
-            p[0] = Node('lista_parametro', [p[1]])
+            p[0] = Node('lista_parametros', [p[1]])
 
     def p_parametro_1(self, p):
         '''parametro : tipo DOIS_PONTOS ID'''
