@@ -1,80 +1,110 @@
 
 
 class Symbol:
-    def __init__(self, kind, _type, name, parameters=None):
-        self.kind = kind
-        self._type = _type
+    def __init__(self, name, type_, scope):
         self.name = name
+        self.type_ = type_
+        self.scope = scope
 
-        if kind == 'function':
-            self.parameters = parameters
 
-    def __str__(self):
-        return 'kind: ' + self.kind + ' type: ' + self._type + ' name: ' + self.name
+class FunctionSymbol(Symbol):
+    def __init__(self, name, type_, scope, parameter_list):
+        super().__init__(name, type_, scope)
+        self.parameter_list = parameter_list
+
+
+class Context:
+    def __init__(self):
+        self.symbols = []
+
+    # def add_function(self, name, type_='void', parameter_list=[]):
+    #     self.symbols.append(Symbol(name, 'function', type_, None, '@global'))
+
+    def add_symbol(self, symbol):
+        self.symbols.append(symbol)
+
+    def get_symbol(self, name, scope):
+        symbol = next(filter(
+            lambda k: k.scope == scope and k.name == name, self.symbols), None)
+
+        if symbol is None:
+            scope_symbols = next(filter(
+                lambda k: k.scope == '@global' and k.name == name, self.symbols), None)
+
+        return symbol
 
 
 class TppSemantic:
     def __init__(self, tree):
         self.tree = tree
-
-        self.global_symbols = {}
-        self.symbols = {}
+        self.context = Context()
 
     def check(self):
-        self.traverse()
+        self.traverse(self.tree)
+        self.check_main_function()
 
-        self.check_for_main()
+    def check_main_function(self):
+        main = self.context.get_symbol('principal', '@global')
+        if main is None:
+            print('sem main')
+        elif main.type_ != 'inteiro':
+            print('main não é inteiro')
 
-    def check_for_main(self):
-        if 'principal' not in self.global_symbols.keys():
-            print('Função principal não existe')
-
+    def function_declaration(self, name, parameter_list, type_):
+        if self.context.get_symbol(name, '@global') is None:
+            self.context.add_symbol(FunctionSymbol(
+                name, type_, '@global', parameter_list))
         else:
-            if self.global_symbols['principal']._type != 'inteiro':
-                print('Função principal deve ser inteiro')
+            print('repetido')
 
-    def add_function(self, _type, name):
-        if name in self.global_symbols.keys():
-            print('função já existe')
-        else:
-            self.global_symbols[name] = Symbol('function', _type, name)
-            self.symbols[name] = {}
+    def traverse(self, node):
+        if node.value == 'programa':
+            self.traverse(node.children[0])
 
-    def traverse(self):
+        elif node.value == 'lista_declaracoes':
+            for child in node.children:
+                self.traverse(child)
 
-        def _traverse(root):
-            if root.value == 'programa':
-                return _traverse(root.children[0])
-            elif root.value == 'lista_declaracoes':
-                _traverse(root.children[0])
-                if len(root.children) > 1:
-                    _traverse(root.children[1])
-            elif root.value == 'declaracao':
-                _traverse(root.children[0])
-            elif root.value == 'declaracao_funcao':
+        elif node.value == 'declaracao':
+            self.traverse(node.children[0])
 
-                if len(root.children) == 1:
+        elif node.value == 'declaracao_variaveis':
+            pass
 
-                    _type = 'void'
-                    header = _traverse(root.children[0])
-                    name = header["name"]
-                    self.add_function(_type, name)
+        elif node.value == 'inicializacao_variaveis':
+            pass
 
+        elif node.value == 'declaracao_funcao':
+            if len(node.children) == 1:
+                header = self.traverse(node.children[0])
+                self.function_declaration(
+                    header["name"], header["parameter_list"], 'void')
+            else:
+                type_ = self.traverse(node.children[0]).value
+                header = self.traverse(node.children[1])
+                self.function_declaration(
+                    header["name"], header["parameter_list"], type_)
+
+        elif node.value == 'tipo':
+            return node.children[0]
+
+        elif node.value == 'cabecalho':
+            name = node.children[0].value
+            parameter_list = self.traverse(node.children[1])
+            body = self.traverse(node.children[2])
+
+            return {"name": name, "parameter_list": parameter_list, "body": body}
+
+        elif node.value == 'lista_parametros':
+            params = []
+
+            if node.children != [None]:
+                if len(node.children) > 1:
+                    params.append(self.traverse(node.children[0])[0])
+                    params.append(self.traverse(node.children[1]))
                 else:
+                    params.append(self.traverse(node.children[0]))
+            return params
 
-                    _type = _traverse(root.children[0]).value
-                    header = _traverse(root.children[1])
-                    name = header["name"]
-
-                    self.add_function(_type, name)
-
-            elif root.value == 'cabecalho':
-                name = root.children[0].value
-                parameter_list = _traverse(root.children[1])
-
-                return {"name": name, "parameter_list": parameter_list}
-
-            elif root.value == 'tipo':
-                return root.children[0]
-
-        _traverse(self.tree)
+        elif node.value == 'parametro':
+            return 'a'

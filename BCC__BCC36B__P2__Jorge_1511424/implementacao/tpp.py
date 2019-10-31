@@ -30,6 +30,5 @@ tppParser.build_graph()
 semantic = tpp_semantic.TppSemantic(tppParser.result)
 semantic.check()
 
-print('simbolos globais')
-for sym in semantic.global_symbols.keys():
-    print(semantic.global_symbols[sym])
+for symbol in semantic.context.symbols:
+    print(symbol)
