@@ -30,5 +30,5 @@ tppParser.build_graph()
 semantic = tpp_semantic.TppSemantic(tppParser.result)
 semantic.check()
 
-for symbol in semantic.context.symbols:
-    print(symbol)
+# for symbol in semantic.context.symbols:
+#     print(symbol)

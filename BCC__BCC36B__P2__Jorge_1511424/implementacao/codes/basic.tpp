@@ -1,8 +1,8 @@
 
-flutuante dois_parametros(inteiro: a, flutuante: b)
+flutuante dois_parametros(inteiro: a[][], flutuante: b)
 fim
 
-inteiro um_parametro(inteiro: a)
+inteiro um_parametro(inteiro: a[])
 fim
 
 sem_parametro()
