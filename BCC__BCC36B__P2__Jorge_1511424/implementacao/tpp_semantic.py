@@ -14,6 +14,9 @@ class VarSymbol(Symbol):
         self.initialized = False
         self.used = False
 
+    def __str__(self):
+        return '{} [symbol] ({}) [{}] -> {}'.format(self.scope, self.name, self.dimensions, self.type_)
+
 
 class FunctionSymbol(Symbol):
     def __init__(self, name, type_, scope, parameter_list):
@@ -22,7 +25,7 @@ class FunctionSymbol(Symbol):
         self.used = False
 
     def __str__(self):
-        return '[function] ({}) {} -> {}'.format(self.name, self.parameter_list, self.type_)
+        return '{} [function] ({}) {} -> {}'.format(self.scope, self.name, self.parameter_list, self.type_)
 
 
 class MyException(Exception):
@@ -51,7 +54,7 @@ class TppSemantic:
     def __init__(self, tree):
         self.tree = tree
         self.context = Context()
-        self.current_function = None
+        self.current_scope = '@global'
 
     def check(self):
         try:
@@ -80,12 +83,16 @@ class TppSemantic:
                     print(
                         "Aviso: Função ‘{}’ declarada, mas não utilizada.".format(symbol.name))
 
+                else:
+                    print('Aviso: Variável ‘{}’ declarada e não utilizada.'.format(
+                        symbol.name))
+
     def function_declaration(self, name, parameter_list, type_):
         if self.context.get_symbol(name, '@global') is None:
             sym = FunctionSymbol(
                 name, type_, '@global', [])
 
-            self.current_function = sym
+            self.current_scope = name
 
             for param in parameter_list:
                 sym.parameter_list.append(
@@ -99,7 +106,7 @@ class TppSemantic:
 
         # Verifica se está chamando função principal
         if name == 'principal':
-            if self.current_function.name != 'principal':
+            if self.current_scope != 'principal':
                 raise MyException(
                     'Erro: Chamada para a função principal não permitida.')
             else:
@@ -133,6 +140,19 @@ class TppSemantic:
             elif len(func.parameter_list) > count:
                 raise MyException(
                     'Erro: Chamada à função ‘{}’ com número de parâmetros menor que o declarado.'.format(name))
+
+    def verify_var(self, var):
+        name = var.children[0].value
+        symbol = self.context.get_symbol(name, self.current_scope)
+
+        if symbol is None:
+            print('Aviso: Variável ‘{}’ não declarada.'.format(name))
+
+        else:
+            if not symbol.initialized:
+                print('Aviso: Variável ‘{}’ declarada e não inicializada.'.format(name))
+
+            symbol.used = True
 
     def tree_to_list(self, key, node):
         tmp = []
@@ -199,7 +219,28 @@ class TppSemantic:
             self.traverse(node.children[0])
 
         elif node.value == 'declaracao_variaveis':
-            pass
+            type_ = node.children[0].children[0].value
+            variable_list = self.tree_to_list(
+                'lista_variaveis', node.children[1])
+
+            for var in variable_list:
+                name = var.children[0].value
+                dimensions = 0
+
+                if len(var.children) > 1:
+                    index_list = self.tree_to_list('indice', var.children[1])
+                    dimensions = len(index_list)
+
+                symbol = self.context.get_symbol(
+                    name, self.current_scope)
+
+                if symbol is None:
+                    self.context.add_symbol(
+                        VarSymbol(name, type_, self.current_scope, dimensions))
+
+                else:
+                    print(
+                        'Aviso: Variável ‘{}’ já declarada anteriormente.'.format(name))
 
         elif node.value == 'inicializacao_variaveis':
             pass
@@ -213,15 +254,7 @@ class TppSemantic:
 
             self.traverse(self.get_function_body(node))
 
-            # if len(node.children) == 1:
-            #     header = self.traverse(node.children[0])
-            #     self.function_declaration(
-            #         header["name"], header["parameter_list"], 'vazio')
-            # else:
-            #     type_ = self.traverse(node.children[0]).value
-            #     header = self.traverse(node.children[1])
-            #     self.function_declaration(
-            #         header["name"], header["parameter_list"], type_)
+            self.current_scope = '@global'
 
         elif node.value == 'tipo':
             return node.children[0]
@@ -314,6 +347,10 @@ class TppSemantic:
             arg_list = node.children[1]
 
             self.verify_function_call(name, arg_list)
+
+        elif node.value == 'var':
+
+            self.verify_var(node)
 
         else:
             print(node)

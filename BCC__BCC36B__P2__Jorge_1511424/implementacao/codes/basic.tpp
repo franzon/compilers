@@ -1,7 +1,6 @@
-fn()
-fim
-
 inteiro principal()
-  principal(3)
-  fn()
+ inteiro: a
+ a = 3
+ a
+ k
 fim
