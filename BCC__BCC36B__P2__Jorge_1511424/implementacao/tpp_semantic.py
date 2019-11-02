@@ -45,7 +45,7 @@ class Context:
             lambda k: k.scope == scope and k.name == name, self.symbols), None)
 
         if symbol is None:
-            scope_symbols = next(filter(
+            symbol = next(filter(
                 lambda k: k.scope == '@global' and k.name == name, self.symbols), None)
 
         return symbol
@@ -73,9 +73,9 @@ class TppSemantic:
     def check_main_function(self):
         main = self.context.get_symbol('principal', '@global')
         if main is None:
-            raise MyException("Erro: Função principal não declarada")
+            print("Erro: Função principal não declarada")
         elif main.type_ != 'inteiro':
-            raise MyException(
+            print(
                 "Erro: Função principal deveria retornar inteiro, mas retorna {}".format(main.type_))
 
     def check_unused(self):
@@ -92,7 +92,7 @@ class TppSemantic:
     def check_no_returns(self):
         for symbol in self.context.symbols:
             if isinstance(symbol, FunctionSymbol) and symbol.type_ != 'vazio' and not symbol.returned:
-                raise MyException('Erro: Função ‘{}’ deveria retornar {}, mas retorna vazio.'.format(
+                print('Erro: Função ‘{}’ deveria retornar {}, mas retorna vazio.'.format(
                     symbol.name, symbol.type_))
 
     def function_declaration(self, name, parameter_list, type_):
@@ -103,12 +103,16 @@ class TppSemantic:
             self.current_scope = name
 
             for param in parameter_list:
-                sym.parameter_list.append(
-                    VarSymbol(param['name'], param['type'], name, param['dimensions']))
+
+                # Adiciona nos parâmetros e no escopo da função
+                var_symbol = VarSymbol(
+                    param['name'], param['type'], name, param['dimensions'])
+                sym.parameter_list.append(var_symbol)
+                self.context.add_symbol(var_symbol)
 
             self.context.add_symbol(sym)
         else:
-            raise MyException(
+            print(
                 'Erro: Função ‘{}’ já foi declarada.'.format(name))
 
     def verify_function_call(self, name, arg_list):
@@ -116,7 +120,7 @@ class TppSemantic:
         # Verifica se está chamando função principal
         if name == 'principal':
             if self.current_scope != 'principal':
-                raise MyException(
+                print(
                     'Erro: Chamada para a função principal não permitida.')
             else:
                 print('Aviso: Chamada recursiva para principal.')
@@ -125,7 +129,7 @@ class TppSemantic:
         func = self.context.get_symbol(name, '@global')
 
         if func is None:
-            raise MyException(
+            print(
                 'Erro: Chamada a função ‘{}’ que não foi declarada.'.format(name))
 
         else:
@@ -144,10 +148,10 @@ class TppSemantic:
                 count += 1
 
             if len(func.parameter_list) < count:
-                raise MyException(
+                print(
                     'Erro: Chamada à função ‘{}’ com número de parâmetros maior que o declarado.'.format(name))
             elif len(func.parameter_list) > count:
-                raise MyException(
+                print(
                     'Erro: Chamada à função ‘{}’ com número de parâmetros menor que o declarado.'.format(name))
 
     def verify_var(self, var, assigning=False):
@@ -156,10 +160,11 @@ class TppSemantic:
         symbol = self.context.get_symbol(name, self.current_scope)
 
         if symbol is None:
-            raise MyException(
+            print(
                 'Aviso: Variável ‘{}’ não declarada.'.format(name))
 
         else:
+            symbol.used = True
 
             if assigning:
                 symbol.initialized = True
@@ -169,11 +174,9 @@ class TppSemantic:
                     print(
                         'Aviso: Variável ‘{}’ declarada e não inicializada.'.format(name))
 
-                symbol.used = True
-
             if len(var.children) == 1:
                 if symbol.dimensions > 0:
-                    raise MyException(
+                    print(
                         "Erro: Não é possível utilizar variável ‘{}’ como escalar.".format(name))
 
             elif len(var.children) == 2:
@@ -184,16 +187,16 @@ class TppSemantic:
                 index_types = list(map(self.get_expression_type, index_list))
 
                 if symbol.dimensions == 0:
-                    raise MyException(
+                    print(
                         "Erro: Variável ‘{}’ é escalar.".format(name))
 
-                if symbol.dimensions != len(index_list):
-                    raise MyException("Erro: Arranjo ‘{}’ de dimensão {} não pode ser acessado como um arranjo de dimensão {}.".format(
+                elif symbol.dimensions != len(index_list):
+                    print("Erro: Arranjo ‘{}’ de dimensão {} não pode ser acessado como um arranjo de dimensão {}.".format(
                         name, symbol.dimensions, len(index_list)))
 
                 for index_type in index_types:
                     if index_type != 'inteiro':
-                        raise MyException(
+                        print(
                             'Erro: Índice de array ‘{}’ não inteiro.'.format(name))
 
             return symbol
@@ -302,7 +305,8 @@ class TppSemantic:
                 if symbol is not None:
                     return symbol.type_
                 else:
-                    print('papapapap')
+                    print('papapapap', node)
+
             elif child.value == 'chamada_funcao':
                 # todo: ver se chama check_function_call
                 symbol = self.context.get_symbol(
@@ -439,28 +443,36 @@ class TppSemantic:
                 print('coerção blablabla')
 
         elif node.value == 'expressao_simples':
-            if len(node.children) == 1:
-                self.traverse(node.children[0])
-            else:
-                pass  # todo
+            # if len(node.children) == 1:
+            #     self.traverse(node.children[0])
+            # else:
+            #     pass  # todo
+            for child in node.children:
+                self.traverse(child)
 
         elif node.value == 'expressao_aditiva':
-            if len(node.children) == 1:
-                self.traverse(node.children[0])
-            else:
-                pass  # todo
+            # if len(node.children) == 1:
+            #     self.traverse(node.children[0])
+            # else:
+            #     pass  # todo
+            for child in node.children:
+                self.traverse(child)
 
         elif node.value == 'expressao_multiplicativa':
-            if len(node.children) == 1:
-                self.traverse(node.children[0])
-            else:
-                pass  # todo
+            # if len(node.children) == 1:
+            #     self.traverse(node.children[0])
+            # else:
+            #     pass  # todo
+            for child in node.children:
+                self.traverse(child)
 
         elif node.value == 'expressao_unaria':
-            if len(node.children) == 1:
-                self.traverse(node.children[0])
-            else:
-                pass  # todo
+            # if len(node.children) == 1:
+            #     self.traverse(node.children[0])
+            # else:
+            #     pass  # todo
+            for child in node.children:
+                self.traverse(child)
 
         elif node.value == 'fator':
             self.traverse(node.children[0])
@@ -479,6 +491,7 @@ class TppSemantic:
                 self.traverse(child)
 
         elif node.value == 'retorna':
+
             self.traverse(node.children[0])
             type_ = self.get_expression_type(node.children[0])
 
@@ -486,8 +499,8 @@ class TppSemantic:
             symbol.returned = True
 
             if symbol.type_ != type_:  # Função retorna tipo diferente do definido
-                raise MyException('Erro: Função ‘{}‘ deveria retornar {}, mas retorna {}.'.format(
+                print('Erro: Função ‘{}‘ deveria retornar {}, mas retorna {}.'.format(
                     self.current_scope, symbol.type_, type_))
 
-        else:
-            print(node)
+        # else:
+        #     print(node)

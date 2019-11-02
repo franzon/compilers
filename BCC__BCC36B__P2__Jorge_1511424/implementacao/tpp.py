@@ -14,7 +14,7 @@ import json
 # args = parser.parse_args()
 
 # arq = open(args.source, 'r', encoding='utf-8')
-arq = open('./codes/basic.tpp', 'r', encoding='utf-8')
+arq = open('./codes/sema-005.tpp', 'r', encoding='utf-8')
 data = arq.read()
 arq.close()
 
@@ -30,5 +30,5 @@ tppParser.build_graph()
 semantic = tpp_semantic.TppSemantic(tppParser.result)
 semantic.check()
 
-for symbol in semantic.context.symbols:
-    print(symbol)
+# for symbol in semantic.context.symbols:
+#     print(symbol)
