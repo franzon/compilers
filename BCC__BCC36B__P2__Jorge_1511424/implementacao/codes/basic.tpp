@@ -1,5 +1,7 @@
+flutuante myfn()
+fim
+
 inteiro principal()
- inteiro: a
- a := 3
- a
+
+    a := a/2
 fim

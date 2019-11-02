@@ -4,6 +4,3 @@
 
 inteiro: a
 flutuante: b
-
-inteiro principal()
-fim

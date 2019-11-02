@@ -213,6 +213,73 @@ class TppSemantic:
             if node.value == 'cabecalho':
                 return node.children[2]
 
+    def get_expression_type(self, node):
+        if node.value == 'expressao':
+            return self.get_expression_type(node.children[0])
+
+        elif node.value == 'expressao_logica':
+            return self.get_expression_type(node.children[0])
+
+        elif node.value == 'expressao_simples':
+            return self.get_expression_type(node.children[0])
+
+        elif node.value == 'expressao_aditiva':
+            if len(node.children) == 1:
+                return self.get_expression_type(node.children[0])
+            else:
+                expr_left_type = self.get_expression_type(node.children[0])
+                expr_right_type = self.get_expression_type(node.children[2])
+
+                if expr_left_type == 'flutuante' or expr_right_type == 'flutuante':
+                    return 'flutuante'
+
+                return 'inteiro'
+
+        elif node.value == 'expressao_multiplicativa':
+            if len(node.children) == 1:
+                return self.get_expression_type(node.children[0])
+            else:
+                expr_left_type = self.get_expression_type(node.children[0])
+                expr_right_type = self.get_expression_type(node.children[2])
+
+                if expr_left_type == 'flutuante' or expr_right_type == 'flutuante':
+                    return 'flutuante'
+
+                return 'inteiro'
+
+        elif node.value == 'expressao_unaria':
+            if len(node.children) == 1:
+                return self.get_expression_type(node.children[0])
+            else:
+                return self.get_expression_type(node.children[1])
+
+        elif node.value == 'fator':
+            child = node.children[0]
+            if child.value == 'expressao':
+                return self.get_expression_type(child)
+            elif child.value == 'var':
+                # todo: ver se chama check_var
+                symbol = self.context.get_symbol(
+                    child.children[0].value, self.current_scope)
+                if symbol is not None:
+                    return symbol.type_
+                else:
+                    print('papapapap')
+            elif child.value == 'chamada_funcao':
+                # todo: ver se chama check_function_call
+                symbol = self.context.get_symbol(
+                    child.children[0].value, '@global')
+                if symbol is not None:
+                    return symbol.type_
+                else:
+                    print('papapapap')
+
+            elif child.value == 'numero':
+                if isinstance(child.children[0].value, float):
+                    return 'flutuante'
+                elif isinstance(child.children[0].value, int):
+                    return 'inteiro'
+
     def traverse(self, node):
         if node.value == 'programa':
             self.traverse(node.children[0])
@@ -326,7 +393,12 @@ class TppSemantic:
             expression = node.children[1]
 
             if len(var.children) == 1:  # Atribuição normal
+                self.traverse(expression)
                 self.verify_var(var, True)
+
+                type_ = self.get_expression_type(expression)
+                print('type', type_)
+
             else:  # Atribuição com índice
                 pass
 
