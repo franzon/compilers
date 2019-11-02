@@ -91,9 +91,9 @@ class TppParser():
     def p_cabecalho(self, p):
         '''cabecalho : ID ABRE_PAR lista_parametros FECHA_PAR corpo FIM'''
 
-        if p[5].children[0] is None:
-            print('[Warning] Corpo da função \'{}\' está vazio. Linha: {}'.format(
-                p[1], p.lineno(1)))
+        # if p[5].children[0] is None:
+        #     print('[Warning] Corpo da função \'{}\' está vazio. Linha: {}'.format(
+        #         p[1], p.lineno(1)))
 
         p[0] = Node('cabecalho', [Node(p[1]), p[3], p[5]])
 

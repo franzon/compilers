@@ -1,15 +1,7 @@
-
-flutuante dois_parametros(inteiro: a[][], flutuante: b)
-fim
-
-inteiro um_parametro(inteiro: a[])
-fim
-
-sem_parametro()
- 
+myfn(inteiro: a)
 fim
 
 inteiro principal()
-  inteiro: a
-
+  myfn()
+  myfn(1,2,3,4,5,6/7)
 fim

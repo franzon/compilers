@@ -11,12 +11,21 @@ class VarSymbol(Symbol):
     def __init__(self, name, type_, scope, dimensions=0):
         super().__init__(name, type_, scope)
         self.dimensions = dimensions
+        self.initialized = False
+        self.used = False
 
 
 class FunctionSymbol(Symbol):
     def __init__(self, name, type_, scope, parameter_list):
         super().__init__(name, type_, scope)
         self.parameter_list = parameter_list
+
+    def __str__(self):
+        return '[function] ({}) {} -> {}'.format(self.name, self.parameter_list, self.type_)
+
+
+class MyException(Exception):
+    pass
 
 
 class Context:
@@ -42,36 +51,65 @@ class TppSemantic:
         self.tree = tree
         self.context = Context()
 
-        self.current_function = None
-
     def check(self):
         try:
             self.traverse(self.tree)
             self.check_main_function()
 
             return True
-        except BaseException as err:
+        except MyException as err:
             print(err)
             return False
 
     def check_main_function(self):
         main = self.context.get_symbol('principal', '@global')
         if main is None:
-            raise BaseException("Função principal não declarada")
+            raise MyException("Erro: Função principal não declarada")
         elif main.type_ != 'inteiro':
-            raise BaseException(
-                "Função principal deveria retornar inteiro, mas retorna vazio")
+            raise MyException(
+                "Erro: Função principal deveria retornar inteiro, mas retorna {}".format(main.type_))
 
     def function_declaration(self, name, parameter_list, type_):
         if self.context.get_symbol(name, '@global') is None:
             sym = FunctionSymbol(
-                name, type_, '@global', parameter_list)
+                name, type_, '@global', [])
 
-            self.current_function = sym
-            print('entrou na ', parameter_list)
+            for param in parameter_list:
+                sym.parameter_list.append(
+                    VarSymbol(param['name'], param['type'], name, param['dimensions']))
+
             self.context.add_symbol(sym)
         else:
             print('repetido')
+
+    def verify_function_call(self, name, arg_list):
+
+        # Verifica se função existe
+        func = self.context.get_symbol(name, '@global')
+
+        if func is None:
+            raise MyException(
+                'Erro: Chamada a função ‘{}’ que não foi declarada.'.format(name))
+
+        else:
+
+            # Verifica pelo número de argumentos
+            count = 0
+
+            if arg_list.children != [None]:
+
+                while arg_list.children[0].value == 'lista_argumentos':
+                    arg_list = arg_list.children[0]
+                    count += 1
+
+                count += 1
+
+            if len(func.parameter_list) < count:
+                raise MyException(
+                    'Erro: Chamada à função ‘{}’ com número de parâmetros maior que o declarado.'.format(name))
+            elif len(func.parameter_list) > count:
+                raise MyException(
+                    'Erro: Chamada à função ‘{}’ com número de parâmetros menor que o declarado.'.format(name))
 
     def traverse(self, node):
         if node.value == 'programa':
@@ -95,7 +133,7 @@ class TppSemantic:
             if len(node.children) == 1:
                 header = self.traverse(node.children[0])
                 self.function_declaration(
-                    header["name"], header["parameter_list"], 'void')
+                    header["name"], header["parameter_list"], 'vazio')
             else:
                 type_ = self.traverse(node.children[0]).value
                 header = self.traverse(node.children[1])
@@ -143,3 +181,56 @@ class TppSemantic:
                 name = node.children[1].value
 
                 return {"name": name, "type": type_, "dimensions": 0}
+
+        elif node.value == 'corpo':
+            if len(node.children) == 2:
+                self.traverse(node.children[0])
+                self.traverse(node.children[1])
+
+        elif node.value == 'acao':
+            self.traverse(node.children[0])
+
+        elif node.value == 'expressao':
+            self.traverse(node.children[0])
+
+        elif node.value == 'expressao_logica':
+            if len(node.children) == 1:
+                self.traverse(node.children[0])
+            else:
+                pass  # todo
+
+        elif node.value == 'expressao_simples':
+            if len(node.children) == 1:
+                self.traverse(node.children[0])
+            else:
+                pass  # todo
+
+        elif node.value == 'expressao_aditiva':
+            if len(node.children) == 1:
+                self.traverse(node.children[0])
+            else:
+                pass  # todo
+
+        elif node.value == 'expressao_multiplicativa':
+            if len(node.children) == 1:
+                self.traverse(node.children[0])
+            else:
+                pass  # todo
+
+        elif node.value == 'expressao_unaria':
+            if len(node.children) == 1:
+                self.traverse(node.children[0])
+            else:
+                pass  # todo
+
+        elif node.value == 'fator':
+            self.traverse(node.children[0])
+
+        elif node.value == 'chamada_funcao':
+            name = node.children[0].value
+            arg_list = node.children[1]
+
+            self.verify_function_call(name, arg_list)
+
+        else:
+            print(node)
