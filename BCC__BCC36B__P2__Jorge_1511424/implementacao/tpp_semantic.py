@@ -23,6 +23,7 @@ class FunctionSymbol(Symbol):
         super().__init__(name, type_, scope)
         self.parameter_list = parameter_list
         self.used = False
+        self.returned = False
 
     def __str__(self):
         return '{} [function] ({}) {} -> {}'.format(self.scope, self.name, self.parameter_list, self.type_)
@@ -62,6 +63,7 @@ class TppSemantic:
 
             self.check_main_function()
             self.check_unused()
+            self.check_no_returns()
 
             return True
         except MyException as err:
@@ -86,6 +88,12 @@ class TppSemantic:
                 else:
                     print('Aviso: Variável ‘{}’ declarada e não utilizada.'.format(
                         symbol.name))
+
+    def check_no_returns(self):
+        for symbol in self.context.symbols:
+            if isinstance(symbol, FunctionSymbol) and symbol.type_ != 'vazio' and not symbol.returned:
+                raise MyException('Erro: Função ‘{}’ deveria retornar {}, mas retorna vazio.'.format(
+                    symbol.name, symbol.type_))
 
     def function_declaration(self, name, parameter_list, type_):
         if self.context.get_symbol(name, '@global') is None:
@@ -146,7 +154,8 @@ class TppSemantic:
         symbol = self.context.get_symbol(name, self.current_scope)
 
         if symbol is None:
-            print('Aviso: Variável ‘{}’ não declarada.'.format(name))
+            raise MyException(
+                'Aviso: Variável ‘{}’ não declarada.'.format(name))
 
         else:
 
@@ -436,8 +445,18 @@ class TppSemantic:
             self.verify_function_call(name, arg_list)
 
         elif node.value == 'var':
-
             self.verify_var(node)
+
+        elif node.value == 'retorna':
+            self.traverse(node.children[0])
+            type_ = self.get_expression_type(node.children[0])
+
+            symbol = self.context.get_symbol(self.current_scope, '@global')
+            symbol.returned = True
+
+            if symbol.type_ != type_:  # Função retorna tipo diferente do definido
+                raise MyException('Erro: Função ‘{}‘ deveria retornar {}, mas retorna {}.'.format(
+                    self.current_scope, symbol.type_, type_))
 
         else:
             print(node)

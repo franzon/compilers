@@ -1,7 +1,7 @@
-flutuante myfn()
+inteiro myfn()
 fim
 
 inteiro principal()
-
-    a := a/2
+    
+    retorna(myfn())
 fim
