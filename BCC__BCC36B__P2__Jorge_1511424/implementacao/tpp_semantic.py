@@ -1,3 +1,4 @@
+from tabulate import tabulate
 
 
 class Symbol:
@@ -5,28 +6,29 @@ class Symbol:
         self.name = name
         self.type_ = type_
         self.scope = scope
+        self.error = False
 
 
 class VarSymbol(Symbol):
-    def __init__(self, name, type_, scope, dimensions=0):
+    def __init__(self, name, type_, scope, dimensions=0, parameter=False):
         super().__init__(name, type_, scope)
         self.dimensions = dimensions
         self.initialized = False
         self.used = False
+        self.parameter = parameter
 
     def __str__(self):
         return '{} [symbol] ({}) [{}] -> {}'.format(self.scope, self.name, self.dimensions, self.type_)
 
 
 class FunctionSymbol(Symbol):
-    def __init__(self, name, type_, scope, parameter_list):
+    def __init__(self, name, type_, scope):
         super().__init__(name, type_, scope)
-        self.parameter_list = parameter_list
-        self.used = False
+        self.used = False if name != 'principal' else True
         self.returned = False
 
     def __str__(self):
-        return '{} [function] ({}) {} -> {}'.format(self.scope, self.name, self.parameter_list, self.type_)
+        return '{} [function] ({}) {} -> {}'.format(self.scope, self.name, self.type_)
 
 
 class MyException(Exception):
@@ -58,7 +60,9 @@ class TppSemantic:
         self.current_scope = '@global'
 
     def check(self):
+        print('\n====================\nExecutando análise semântica...\n')
         try:
+            self.declare_functions(self.tree)
             self.traverse(self.tree)
 
             self.check_main_function()
@@ -69,6 +73,25 @@ class TppSemantic:
         except MyException as err:
             print(err)
             return False
+
+    def print_symbols(self):
+        functions = list(filter(lambda k: isinstance(
+            k, FunctionSymbol), self.context.symbols))
+        functions = list(
+            map(lambda k: [k.scope, k.type_, k.name, k.used], functions))
+
+        variables = list(filter(lambda k: isinstance(
+            k, VarSymbol), self.context.symbols))
+        variables = list(
+            map(lambda k: [k.scope, k.type_, k.name, k.dimensions, k.initialized, k.used, k.parameter], variables))
+
+        print('\nFunções: \n')
+        print(tabulate(functions, headers=[
+              'Escopo', 'Tipo', 'Nome', 'Utilizado']))
+
+        print('\nVariáveis: \n')
+        print(tabulate(variables, headers=[
+              'Escopo', 'Tipo', 'Nome', 'Dimensões', 'Inicializado', 'Utilizado', 'Parâmetro']))
 
     def check_main_function(self):
         main = self.context.get_symbol('principal', '@global')
@@ -82,12 +105,15 @@ class TppSemantic:
         for symbol in self.context.symbols:
             if symbol.name != 'principal' and not symbol.used:
                 if isinstance(symbol, FunctionSymbol):
-                    print(
-                        "Aviso: Função ‘{}’ declarada, mas não utilizada.".format(symbol.name))
-
+                    if not symbol.error:
+                        print(
+                            "Aviso: Função ‘{}’ declarada, mas não utilizada.".format(symbol.name))
+                        symbol.error = True
                 else:
-                    print('Aviso: Variável ‘{}’ declarada e não utilizada.'.format(
-                        symbol.name))
+                    if not symbol.error:
+                        print('Aviso: Variável ‘{}’ declarada e não utilizada.'.format(
+                            symbol.name))
+                        symbol.error = True
 
     def check_no_returns(self):
         for symbol in self.context.symbols:
@@ -98,22 +124,39 @@ class TppSemantic:
     def function_declaration(self, name, parameter_list, type_):
         if self.context.get_symbol(name, '@global') is None:
             sym = FunctionSymbol(
-                name, type_, '@global', [])
+                name, type_, '@global')
 
-            self.current_scope = name
+            # self.current_scope = name
 
             for param in parameter_list:
-
-                # Adiciona nos parâmetros e no escopo da função
                 var_symbol = VarSymbol(
-                    param['name'], param['type'], name, param['dimensions'])
-                sym.parameter_list.append(var_symbol)
+                    param['name'], param['type'], name, param['dimensions'], parameter=True)
                 self.context.add_symbol(var_symbol)
 
             self.context.add_symbol(sym)
         else:
             print(
                 'Erro: Função ‘{}’ já foi declarada.'.format(name))
+
+    def declare_functions(self, node):
+        if node.value == 'programa':
+            declaration_list = self.tree_to_list(
+                'lista_declaracoes', node.children[0])
+
+            function_declaration_list = list(
+                map(lambda k: k.children[0], declaration_list))
+
+            function_declaration_list = list(
+                filter(lambda k: k.value == 'declaracao_funcao', function_declaration_list))
+
+            for declaration_node in function_declaration_list:
+
+                name = self.get_function_name(declaration_node)
+                parameter_list = self.get_function_parameter_list(
+                    declaration_node)
+                type_ = self.get_function_type(declaration_node)
+
+                self.function_declaration(name, parameter_list, type_)
 
     def verify_function_call(self, name, arg_list):
 
@@ -147,10 +190,13 @@ class TppSemantic:
 
                 count += 1
 
-            if len(func.parameter_list) < count:
+            parameter_list = list(filter(lambda k: k.scope == name and isinstance(
+                k, VarSymbol) and k.parameter, self.context.symbols))
+
+            if len(parameter_list) < count:
                 print(
-                    'Erro: Chamada à função ‘{}’ com número de parâmetros maior que o declarado.'.format(name))
-            elif len(func.parameter_list) > count:
+                    'Erro: Chamada à função ‘{}’     com número de parâmetros maior que o declarado.'.format(name))
+            elif len(parameter_list) > count:
                 print(
                     'Erro: Chamada à função ‘{}’ com número de parâmetros menor que o declarado.'.format(name))
 
@@ -161,7 +207,7 @@ class TppSemantic:
 
         if symbol is None:
             print(
-                'Aviso: Variável ‘{}’ não declarada.'.format(name))
+                'Erro: Variável ‘{}’ não declarada.'.format(name))
 
         else:
             symbol.used = True
@@ -170,9 +216,11 @@ class TppSemantic:
                 symbol.initialized = True
 
             else:
-                if not symbol.initialized:
-                    print(
-                        'Aviso: Variável ‘{}’ declarada e não inicializada.'.format(name))
+                if not symbol.initialized and not symbol.parameter:
+                    if not symbol.error:
+                        print(
+                            'Aviso: Variável ‘{}’ declarada e não inicializada.'.format(name))
+                        symbol.error = True
 
             if len(var.children) == 1:
                 if symbol.dimensions > 0:
@@ -304,8 +352,6 @@ class TppSemantic:
                     child.children[0].value, self.current_scope)
                 if symbol is not None:
                     return symbol.type_
-                else:
-                    print('papapapap', node)
 
             elif child.value == 'chamada_funcao':
                 # todo: ver se chama check_function_call
@@ -313,8 +359,6 @@ class TppSemantic:
                     child.children[0].value, '@global')
                 if symbol is not None:
                     return symbol.type_
-                else:
-                    print('papapapap')
 
             elif child.value == 'numero':
                 if isinstance(child.children[0].value, float):
@@ -354,21 +398,19 @@ class TppSemantic:
                         VarSymbol(name, type_, self.current_scope, dimensions))
 
                 else:
-                    print(
-                        'Aviso: Variável ‘{}’ já declarada anteriormente.'.format(name))
+                    if not symbol.error:
+                        print(
+                            'Aviso: Variável ‘{}’ já declarada anteriormente.'.format(name))
+                        symbol.error = True
 
         elif node.value == 'inicializacao_variaveis':
             pass
 
         elif node.value == 'declaracao_funcao':
             name = self.get_function_name(node)
-            parameter_list = self.get_function_parameter_list(node)
-            type_ = self.get_function_type(node)
 
-            self.function_declaration(name, parameter_list, type_)
-
+            self.current_scope = name
             self.traverse(self.get_function_body(node))
-
             self.current_scope = '@global'
 
         elif node.value == 'tipo':
@@ -440,7 +482,8 @@ class TppSemantic:
             type_ = self.get_expression_type(expression)
 
             if symbol.type_ != type_:
-                print('coerção blablabla')
+                print('Aviso: Atribuição de tipos distintos ‘{}’ {} e ‘expressão’ {}'.format(
+                    symbol.name, symbol.type_, type_))
 
         elif node.value == 'expressao_simples':
             # if len(node.children) == 1:
@@ -498,9 +541,14 @@ class TppSemantic:
             symbol = self.context.get_symbol(self.current_scope, '@global')
             symbol.returned = True
 
-            if symbol.type_ != type_:  # Função retorna tipo diferente do definido
+            if type_ is not None and symbol.type_ != type_:  # Função retorna tipo diferente do definido
                 print('Erro: Função ‘{}‘ deveria retornar {}, mas retorna {}.'.format(
                     self.current_scope, symbol.type_, type_))
 
+        elif node.value == 'escreva':
+            self.traverse(node.children[0])
+
+        elif node.value == 'leia':
+            self.traverse(node.children[0])
         # else:
         #     print(node)

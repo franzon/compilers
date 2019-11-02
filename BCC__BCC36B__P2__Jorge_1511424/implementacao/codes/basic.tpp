@@ -1,13 +1,18 @@
-flutuante fn()
-    retorna(4.0)
+{Erro: Variável 'c' não declarada}
+{Aviso: Coerção implícita do valor de 'b'}
+{Aviso: Coerção implícita do valor retornado por 'func'}
+{Erro: Função principal deveria retornar inteiro, mas retorna vazio}
+
+flutuante: a[30][40]
+inteiro: b
+
+inteiro func()
+  retorna(c)
 fim
 
 inteiro principal()
-    inteiro: a[10]
-    a[fn()] := 6
+	b := 18
+	a := b
 
-    inteiro: b
-    b := a[2]
-
-    retorna(b)
+	a := func()
 fim
