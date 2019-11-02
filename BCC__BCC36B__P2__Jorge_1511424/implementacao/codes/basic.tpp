@@ -1,7 +1,13 @@
-inteiro myfn()
+flutuante fn()
+    retorna(4.0)
 fim
 
 inteiro principal()
-    
-    retorna(myfn())
+    inteiro: a[10]
+    a[fn()] := 6
+
+    inteiro: b
+    b := a[2]
+
+    retorna(b)
 fim

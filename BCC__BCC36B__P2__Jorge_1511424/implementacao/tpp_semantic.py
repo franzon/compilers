@@ -108,7 +108,8 @@ class TppSemantic:
 
             self.context.add_symbol(sym)
         else:
-            print('repetido')
+            raise MyException(
+                'Erro: Função ‘{}’ já foi declarada.'.format(name))
 
     def verify_function_call(self, name, arg_list):
 
@@ -150,6 +151,7 @@ class TppSemantic:
                     'Erro: Chamada à função ‘{}’ com número de parâmetros menor que o declarado.'.format(name))
 
     def verify_var(self, var, assigning=False):
+
         name = var.children[0].value
         symbol = self.context.get_symbol(name, self.current_scope)
 
@@ -168,6 +170,33 @@ class TppSemantic:
                         'Aviso: Variável ‘{}’ declarada e não inicializada.'.format(name))
 
                 symbol.used = True
+
+            if len(var.children) == 1:
+                if symbol.dimensions > 0:
+                    raise MyException(
+                        "Erro: Não é possível utilizar variável ‘{}’ como escalar.".format(name))
+
+            elif len(var.children) == 2:
+
+                self.traverse(var.children[1])
+
+                index_list = self.tree_to_list('indice', var.children[1])
+                index_types = list(map(self.get_expression_type, index_list))
+
+                if symbol.dimensions == 0:
+                    raise MyException(
+                        "Erro: Variável ‘{}’ é escalar.".format(name))
+
+                if symbol.dimensions != len(index_list):
+                    raise MyException("Erro: Arranjo ‘{}’ de dimensão {} não pode ser acessado como um arranjo de dimensão {}.".format(
+                        name, symbol.dimensions, len(index_list)))
+
+                for index_type in index_types:
+                    if index_type != 'inteiro':
+                        raise MyException(
+                            'Erro: Índice de array ‘{}’ não inteiro.'.format(name))
+
+            return symbol
 
     def tree_to_list(self, key, node):
         tmp = []
@@ -401,15 +430,13 @@ class TppSemantic:
             var = node.children[0]
             expression = node.children[1]
 
-            if len(var.children) == 1:  # Atribuição normal
-                self.traverse(expression)
-                self.verify_var(var, True)
+            self.traverse(expression)
+            symbol = self.verify_var(var, True)
 
-                type_ = self.get_expression_type(expression)
-                print('type', type_)
+            type_ = self.get_expression_type(expression)
 
-            else:  # Atribuição com índice
-                pass
+            if symbol.type_ != type_:
+                print('coerção blablabla')
 
         elif node.value == 'expressao_simples':
             if len(node.children) == 1:
@@ -446,6 +473,10 @@ class TppSemantic:
 
         elif node.value == 'var':
             self.verify_var(node)
+
+        elif node.value == 'indice':
+            for child in node.children:
+                self.traverse(child)
 
         elif node.value == 'retorna':
             self.traverse(node.children[0])
