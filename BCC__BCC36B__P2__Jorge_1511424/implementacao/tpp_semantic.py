@@ -19,6 +19,7 @@ class FunctionSymbol(Symbol):
     def __init__(self, name, type_, scope, parameter_list):
         super().__init__(name, type_, scope)
         self.parameter_list = parameter_list
+        self.used = False
 
     def __str__(self):
         return '[function] ({}) {} -> {}'.format(self.name, self.parameter_list, self.type_)
@@ -50,11 +51,14 @@ class TppSemantic:
     def __init__(self, tree):
         self.tree = tree
         self.context = Context()
+        self.current_function = None
 
     def check(self):
         try:
             self.traverse(self.tree)
+
             self.check_main_function()
+            self.check_unused()
 
             return True
         except MyException as err:
@@ -69,10 +73,19 @@ class TppSemantic:
             raise MyException(
                 "Erro: Função principal deveria retornar inteiro, mas retorna {}".format(main.type_))
 
+    def check_unused(self):
+        for symbol in self.context.symbols:
+            if symbol.name != 'principal' and not symbol.used:
+                if isinstance(symbol, FunctionSymbol):
+                    print(
+                        "Aviso: Função ‘{}’ declarada, mas não utilizada.".format(symbol.name))
+
     def function_declaration(self, name, parameter_list, type_):
         if self.context.get_symbol(name, '@global') is None:
             sym = FunctionSymbol(
                 name, type_, '@global', [])
+
+            self.current_function = sym
 
             for param in parameter_list:
                 sym.parameter_list.append(
@@ -84,6 +97,14 @@ class TppSemantic:
 
     def verify_function_call(self, name, arg_list):
 
+        # Verifica se está chamando função principal
+        if name == 'principal':
+            if self.current_function.name != 'principal':
+                raise MyException(
+                    'Erro: Chamada para a função principal não permitida.')
+            else:
+                print('Aviso: Chamada recursiva para principal.')
+
         # Verifica se função existe
         func = self.context.get_symbol(name, '@global')
 
@@ -92,6 +113,8 @@ class TppSemantic:
                 'Erro: Chamada a função ‘{}’ que não foi declarada.'.format(name))
 
         else:
+
+            func.used = True
 
             # Verifica pelo número de argumentos
             count = 0
@@ -111,6 +134,59 @@ class TppSemantic:
                 raise MyException(
                     'Erro: Chamada à função ‘{}’ com número de parâmetros menor que o declarado.'.format(name))
 
+    def tree_to_list(self, key, node):
+        tmp = []
+
+        while node.value == key:
+            if len(node.children) == 0 or node.children == [None]:
+                return []
+            elif len(node.children) == 1:
+                tmp.insert(0, node.children[0])
+            elif len(node.children) == 2:
+                tmp.insert(0, node.children[1])
+
+            node = node.children[0]
+
+        return tmp
+
+    def get_function_type(self, function_declaration):
+        if len(function_declaration.children) == 1:
+            return 'vazio'
+
+        node = function_declaration.children[0]
+        while node.value != 'tipo':
+            node = node.children[0]
+
+        return node.children[0].value
+
+    def get_function_name(self, function_declaration):
+        for node in function_declaration.children:
+            if node.value == 'cabecalho':
+                return node.children[0].value
+
+    def get_parameter(self, parameter):
+        node = parameter
+        count = 0
+        while node.children[0].value == 'parametro':
+            node = node.children[0]
+            count += 1
+
+        return {"type": node.children[0].children[0].value, "name": node.children[1].value, "dimensions": count}
+
+    def get_function_parameter_list(self, function_declaration):
+        for node in function_declaration.children:
+            if node.value == 'cabecalho':
+                parameter_nodes = self.tree_to_list(
+                    'lista_parametros', node.children[1])
+
+                return list(
+                    map(self.get_parameter, parameter_nodes))
+
+    def get_function_body(self, function_declaration):
+        for node in function_declaration.children:
+            if node.value == 'cabecalho':
+                return node.children[2]
+
     def traverse(self, node):
         if node.value == 'programa':
             self.traverse(node.children[0])
@@ -129,16 +205,23 @@ class TppSemantic:
             pass
 
         elif node.value == 'declaracao_funcao':
+            name = self.get_function_name(node)
+            parameter_list = self.get_function_parameter_list(node)
+            type_ = self.get_function_type(node)
 
-            if len(node.children) == 1:
-                header = self.traverse(node.children[0])
-                self.function_declaration(
-                    header["name"], header["parameter_list"], 'vazio')
-            else:
-                type_ = self.traverse(node.children[0]).value
-                header = self.traverse(node.children[1])
-                self.function_declaration(
-                    header["name"], header["parameter_list"], type_)
+            self.function_declaration(name, parameter_list, type_)
+
+            self.traverse(self.get_function_body(node))
+
+            # if len(node.children) == 1:
+            #     header = self.traverse(node.children[0])
+            #     self.function_declaration(
+            #         header["name"], header["parameter_list"], 'vazio')
+            # else:
+            #     type_ = self.traverse(node.children[0]).value
+            #     header = self.traverse(node.children[1])
+            #     self.function_declaration(
+            #         header["name"], header["parameter_list"], type_)
 
         elif node.value == 'tipo':
             return node.children[0]
