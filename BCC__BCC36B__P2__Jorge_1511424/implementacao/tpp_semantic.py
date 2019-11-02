@@ -141,7 +141,7 @@ class TppSemantic:
                 raise MyException(
                     'Erro: Chamada à função ‘{}’ com número de parâmetros menor que o declarado.'.format(name))
 
-    def verify_var(self, var):
+    def verify_var(self, var, assigning=False):
         name = var.children[0].value
         symbol = self.context.get_symbol(name, self.current_scope)
 
@@ -149,10 +149,16 @@ class TppSemantic:
             print('Aviso: Variável ‘{}’ não declarada.'.format(name))
 
         else:
-            if not symbol.initialized:
-                print('Aviso: Variável ‘{}’ declarada e não inicializada.'.format(name))
 
-            symbol.used = True
+            if assigning:
+                symbol.initialized = True
+
+            else:
+                if not symbol.initialized:
+                    print(
+                        'Aviso: Variável ‘{}’ declarada e não inicializada.'.format(name))
+
+                symbol.used = True
 
     def tree_to_list(self, key, node):
         tmp = []
@@ -314,6 +320,15 @@ class TppSemantic:
                 self.traverse(node.children[0])
             else:
                 pass  # todo
+
+        elif node.value == 'atribuicao':
+            var = node.children[0]
+            expression = node.children[1]
+
+            if len(var.children) == 1:  # Atribuição normal
+                self.verify_var(var, True)
+            else:  # Atribuição com índice
+                pass
 
         elif node.value == 'expressao_simples':
             if len(node.children) == 1:
