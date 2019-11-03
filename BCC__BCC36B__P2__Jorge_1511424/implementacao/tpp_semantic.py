@@ -568,30 +568,52 @@ class TppSemantic:
                        'expressao_aditiva', 'expressao_multiplicativa']
 
         operators = ['operador_logico', 'operador_relacional',
-                     'operador_soma', 'operador_multiplicacao']
+                     'operador_soma', 'operador_multiplicacao', 'operador_negacao']
 
         if node is not None and node.children != [None]:
+
             if node.value in expressions:
                 if len(node.children) == 1:
                     return self._prune(node.children[0])
+
+                left = self._prune(node.children[0])
+                op = self._prune(node.children[1])
+                right = self._prune(node.children[2])
+
+                node.value = op.value
+                node.children = [left, right]
+                return node
+
+            elif node.value == 'lista_argumentos':
+                if len(node.children) == 1:
+                    expr = self._prune(node.children[0])
+                    node.children = [expr]
+                    return node
+
                 else:
                     left = self._prune(node.children[0])
-                    op = self._prune(node.children[1])
-                    right = self._prune(node.children[2])
+                    expr = self._prune(node.children[1])
 
-                    node.value = op.value
-                    node.children = [left, right]
+                    node.children = [left, expr]
+
                     return node
 
             elif node.value == 'atribuicao':
                 var = self._prune(node.children[0])
                 expr = self._prune(node.children[1])
 
-                print(var, expr)
                 node.children = [var, expr]
                 return node
 
             elif node.value == 'fator':
+                child = node.children[0]
+                if child.value == 'chamada_funcao':
+                    func = child.children[0]
+                    args = self._prune(child.children[1])
+
+                    child.children[1] = args
+                    return child
+
                 return node.children[0]
 
             elif node.value == 'var':
@@ -601,7 +623,16 @@ class TppSemantic:
                 return self._prune(node.children[0])
 
             elif node.value == 'expressao_unaria':
-                return self._prune(node.children[0])
+                if len(node.children) == 1:
+                    return self._prune(node.children[0])
+
+                op = self._prune(node.children[0])
+                expr = self._prune(node.children[1])
+
+                node.value = op.value
+                node.children = [expr]
+
+                return node
 
             elif node.value in operators:
                 return node.children[0]
