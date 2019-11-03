@@ -564,6 +564,9 @@ class TppSemantic:
 
     def _prune(self, node):
 
+        actions = ['declaracao_variaveis',
+                   'se', 'repita', 'leia', 'escreva', 'retorna']
+
         expressions = ['expressao_logica', 'expressao_simples',
                        'expressao_aditiva', 'expressao_multiplicativa']
 
@@ -572,7 +575,13 @@ class TppSemantic:
 
         if node is not None and node.children != [None]:
 
-            if node.value in expressions:
+            if node.value == 'expressao':
+                factor = self._prune(node.children[0])
+                node.value = factor.value
+                node.children = factor.children
+                return node
+
+            elif node.value in expressions:
                 if len(node.children) == 1:
                     return self._prune(node.children[0])
 
@@ -584,11 +593,36 @@ class TppSemantic:
                 node.children = [left, right]
                 return node
 
+            elif node.value == 'atribuicao':
+                var = self._prune(node.children[0])
+                expr = self._prune(node.children[1])
+
+                node.children = [var.children[0], expr]
+                return node
+
+            elif node.value == 'fator':
+                return self._prune(node.children[0])
+
+            elif node.value == 'numero':
+                return node
+
+            elif node.value == 'var':
+                if len(node.children) == 1:
+                    return node
+
+                var = node.children[0]
+                index = self._prune(node.children[1])
+
+                node.children = [var, index]
+                return node
+
+            elif node.value == 'chamada_funcao':
+                self._prune(node.children[1])
+                return node
+
             elif node.value == 'lista_argumentos':
                 if len(node.children) == 1:
-                    expr = self._prune(node.children[0])
-                    node.children = [expr]
-                    return node
+                    return self._prune(node.children[0])
 
                 else:
                     left = self._prune(node.children[0])
@@ -598,29 +632,17 @@ class TppSemantic:
 
                     return node
 
-            elif node.value == 'atribuicao':
-                var = self._prune(node.children[0])
-                expr = self._prune(node.children[1])
+            elif node.value == 'indice':
+                if len(node.children) == 1:
+                    return self._prune(node.children[0])
 
-                node.children = [var, expr]
-                return node
+                else:
+                    left = self._prune(node.children[0])
+                    expr = self._prune(node.children[1])
 
-            elif node.value == 'fator':
-                child = node.children[0]
-                if child.value == 'chamada_funcao':
-                    func = child.children[0]
-                    args = self._prune(child.children[1])
+                    node.children = [left, expr]
 
-                    child.children[1] = args
-                    return child
-
-                return node.children[0]
-
-            elif node.value == 'var':
-                return node.children[0]
-
-            elif node.value == 'expressao':
-                return self._prune(node.children[0])
+                    return node
 
             elif node.value == 'expressao_unaria':
                 if len(node.children) == 1:
@@ -636,34 +658,10 @@ class TppSemantic:
 
             elif node.value in operators:
                 return node.children[0]
-
             else:
 
                 for child in node.children:
                     self._prune(child)
-        # if node is not None and node.children != [None]:
-
-        #     if node.value in expressions:
-        #         if len(node.children) == 1:
-        #             return self._prune(node.children[0])
-        #         else:
-        #             expr_left = self._prune(node.children[0])
-        #             op = self._prune(node.children[1])
-        #             expr_right = self._prune(node.children[2])
-
-        #             op.children = [expr_left, expr_right]
-
-        #             return op
-
-        #     elif node.value in leafs:
-        #         return node.children[0]
-
-        #     else:
-        #         if len(node.children) == 1:
-        #             return self._prune(node.children[0])
-
-        #         for child in node.children:
-        #             self._prune(child)
 
     def build_graph(self):
         def traverse(root, i):
