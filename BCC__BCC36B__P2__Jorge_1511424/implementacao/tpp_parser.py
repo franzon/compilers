@@ -303,4 +303,4 @@ class TppParser():
         self.graph.node(str(self.result))
         traverse(self.result, 0)
 
-        self.graph.render()
+        self.graph.render('abstract')

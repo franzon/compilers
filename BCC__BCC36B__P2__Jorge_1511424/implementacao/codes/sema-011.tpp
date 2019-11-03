@@ -10,5 +10,5 @@ inteiro principal()
 	a := 1.0
 
 	a := b
-	b := a+1
+	b := a
 fim
