@@ -354,14 +354,12 @@ class TppSemantic:
             if child.value == 'expressao':
                 return self.get_expression_type(child)
             elif child.value == 'var':
-                # todo: ver se chama check_var
                 symbol = self.context.get_symbol(
                     child.children[0].value, self.current_scope)
                 if symbol is not None:
                     return symbol.type_
 
             elif child.value == 'chamada_funcao':
-                # todo: ver se chama check_function_call
                 symbol = self.context.get_symbol(
                     child.children[0].value, '@global')
                 if symbol is not None:
@@ -495,34 +493,18 @@ class TppSemantic:
                         symbol.name, symbol.type_, type_))
 
         elif node.value == 'expressao_simples':
-            # if len(node.children) == 1:
-            #     self.traverse(node.children[0])
-            # else:
-            #     pass  # todo
             for child in node.children:
                 self._traverse(child)
 
         elif node.value == 'expressao_aditiva':
-            # if len(node.children) == 1:
-            #     self.traverse(node.children[0])
-            # else:
-            #     pass  # todo
             for child in node.children:
                 self._traverse(child)
 
         elif node.value == 'expressao_multiplicativa':
-            # if len(node.children) == 1:
-            #     self.traverse(node.children[0])
-            # else:
-            #     pass  # todo
             for child in node.children:
                 self._traverse(child)
 
         elif node.value == 'expressao_unaria':
-            # if len(node.children) == 1:
-            #     self.traverse(node.children[0])
-            # else:
-            #     pass  # todo
             for child in node.children:
                 self._traverse(child)
 
@@ -559,8 +541,6 @@ class TppSemantic:
 
         elif node.value == 'leia':
             self._traverse(node.children[0])
-        # else:
-        #     print(node)
 
     def _prune(self, node):
 
@@ -597,7 +577,7 @@ class TppSemantic:
                 var = self._prune(node.children[0])
                 expr = self._prune(node.children[1])
 
-                node.children = [var.children[0], expr]
+                node.children = [var, expr]
                 return node
 
             elif node.value == 'fator':

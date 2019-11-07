@@ -14,7 +14,7 @@ parser.add_argument('source', type=str, help='Arquivo de entrada')
 args = parser.parse_args()
 
 arq = open(args.source, 'r', encoding='utf-8')
-# arq = open('./codes/sema-001.tpp', 'r', encoding='utf-8')
+# arq = open('./codes/sema-002.tpp', 'r', encoding='utf-8')
 data = arq.read()
 arq.close()
 
