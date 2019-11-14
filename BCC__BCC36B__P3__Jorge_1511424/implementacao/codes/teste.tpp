@@ -1,4 +1,8 @@
-funcao(inteiro : a)
+inteiro: x,y
+flutuante: y[10]
+inteiro: z[20][30]
+
+funcao(inteiro : a, inteiro: b, flutuante: d)
     a
 fim
 

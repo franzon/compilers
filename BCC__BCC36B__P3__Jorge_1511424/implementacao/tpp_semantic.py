@@ -12,15 +12,16 @@ class Symbol:
 
 
 class VarSymbol(Symbol):
-    def __init__(self, name, type_, scope, dimensions=0, parameter=False):
+    def __init__(self, name, type_, scope, dimensions=0, dimension_list=[], parameter=False):
         super().__init__(name, type_, scope)
         self.dimensions = dimensions
+        self.dimension_list = dimension_list
         self.initialized = False
         self.used = False
         self.parameter = parameter
 
     def __str__(self):
-        return '{} [symbol] ({}) [{}] -> {}'.format(self.scope, self.name, self.dimensions, self.type_)
+        return '{} [symbol] ({}) [{}] [{}] -> {}'.format(self.scope, self.name, self.dimensions, self.dimension_list,self.type_)
 
 
 class FunctionSymbol(Symbol):
@@ -133,7 +134,6 @@ class TppSemantic:
             sym = FunctionSymbol(
                 name, type_, '@global')
 
-            # self.current_scope = name
 
             for param in parameter_list:
                 var_symbol = VarSymbol(
@@ -147,7 +147,7 @@ class TppSemantic:
 
     def declare_functions(self, node):
         if node.value == 'programa':
-            declaration_list = self.tree_to_list(
+            declaration_list = TppSemantic.tree_to_list(
                 'lista_declaracoes', node.children[0])
 
             function_declaration_list = list(
@@ -186,18 +186,7 @@ class TppSemantic:
 
             func.used = True
 
-            # Verifica pelo número de argumentos
-            # count = 0
-
-            # if arg_list.children != [None]:
-
-            #     while arg_list.children[0].value == 'lista_argumentos':
-            #         arg_list = arg_list.children[0]
-            #         count += 1
-
-            #     count += 1
-
-            arg_list = self.tree_to_list('lista_argumentos', arg_list)
+            arg_list = TppSemantic.tree_to_list('lista_argumentos', arg_list)
 
             parameter_list = list(filter(lambda k: k.scope == name and isinstance(
                 k, VarSymbol) and k.parameter, self.context.symbols))
@@ -211,10 +200,11 @@ class TppSemantic:
 
             for i in range(len(arg_list)):
                 arg_type = self.get_expression_type(arg_list[i])
-                parameter_type =  parameter_list[i].type_
+                parameter_type = parameter_list[i].type_
 
                 if arg_type != parameter_type:
-                    print('Erro: Parâmetro do tipo ‘{}’ recebendo valor do tipo ‘{}’'.format(parameter_type, arg_type))
+                    print('Erro: Parâmetro do tipo ‘{}’ recebendo valor do tipo ‘{}’'.format(
+                        parameter_type, arg_type))
 
     def verify_var(self, var, assigning=False):
 
@@ -247,7 +237,8 @@ class TppSemantic:
 
                 self._traverse(var.children[1])
 
-                index_list = self.tree_to_list('indice', var.children[1])
+                index_list = TppSemantic.tree_to_list(
+                    'indice', var.children[1])
                 index_types = list(map(self.get_expression_type, index_list))
 
                 if symbol.dimensions == 0:
@@ -265,7 +256,8 @@ class TppSemantic:
 
             return symbol
 
-    def tree_to_list(self, key, node):
+    @classmethod
+    def tree_to_list(cls, key, node):
         tmp = []
 
         while node.value == key:
@@ -280,7 +272,8 @@ class TppSemantic:
 
         return tmp
 
-    def get_function_type(self, function_declaration):
+    @classmethod
+    def get_function_type(cls, function_declaration):
         if len(function_declaration.children) == 1:
             return 'vazio'
 
@@ -290,12 +283,14 @@ class TppSemantic:
 
         return node.children[0].value
 
-    def get_function_name(self, function_declaration):
+    @classmethod
+    def get_function_name(cls, function_declaration):
         for node in function_declaration.children:
             if node.value == 'cabecalho':
                 return node.children[0].value
 
-    def get_parameter(self, parameter):
+    @classmethod
+    def get_parameter(cls, parameter):
         node = parameter
         count = 0
         while node.children[0].value == 'parametro':
@@ -304,15 +299,17 @@ class TppSemantic:
 
         return {"type": node.children[0].children[0].value, "name": node.children[1].value, "dimensions": count}
 
-    def get_function_parameter_list(self, function_declaration):
+    @classmethod
+    def get_function_parameter_list(cls, function_declaration):
         for node in function_declaration.children:
             if node.value == 'cabecalho':
-                parameter_nodes = self.tree_to_list(
+                parameter_nodes = TppSemantic.tree_to_list(
                     'lista_parametros', node.children[1])
 
                 return list(
-                    map(self.get_parameter, parameter_nodes))
+                    map(cls.get_parameter, parameter_nodes))
 
+    @classmethod
     def get_function_body(self, function_declaration):
         for node in function_declaration.children:
             if node.value == 'cabecalho':
@@ -393,23 +390,28 @@ class TppSemantic:
 
         elif node.value == 'declaracao_variaveis':
             type_ = node.children[0].children[0].value
-            variable_list = self.tree_to_list(
+            variable_list = TppSemantic.tree_to_list(
                 'lista_variaveis', node.children[1])
 
             for var in variable_list:
                 name = var.children[0].value
                 dimensions = 0
 
+                index_list = []
+
                 if len(var.children) > 1:
-                    index_list = self.tree_to_list('indice', var.children[1])
+                    index_list = TppSemantic.tree_to_list(
+                        'indice', var.children[1])
                     dimensions = len(index_list)
+
+                index_list = list(map(lambda k: k.children[0].value, index_list))
 
                 symbol = self.context.get_symbol(
                     name, self.current_scope)
 
                 if symbol is None:
                     self.context.add_symbol(
-                        VarSymbol(name, type_, self.current_scope, dimensions))
+                        VarSymbol(name, type_, self.current_scope, dimensions, index_list))
 
                 else:
                     if not symbol.error:

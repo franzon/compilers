@@ -6,15 +6,16 @@ import argparse
 import tpp_lexer
 import tpp_parser
 import tpp_semantic
+import tpp_gen
 import json
 
-# parser = argparse.ArgumentParser(description='Compilador da linguagem TPP')
-# parser.add_argument('source', type=str, help='Arquivo de entrada')
+parser = argparse.ArgumentParser(description='Compilador da linguagem TPP')
+parser.add_argument('source', type=str, help='Arquivo de entrada')
 
-# args = parser.parse_args()
+args = parser.parse_args()
 
-# arq = open(args.source, 'r', encoding='utf-8')
-arq = open('./codes/teste.tpp', 'r', encoding='utf-8')
+arq = open(args.source, 'r', encoding='utf-8')
+# arq = open('./codes/teste.tpp', 'r', encoding='utf-8')
 data = arq.read()
 arq.close()
 
@@ -32,3 +33,6 @@ semantic.traverse()
 
 semantic.print_symbols()
 semantic.prune()
+
+gen = tpp_gen.TppGen(semantic.tree, semantic.context)
+gen.generate()

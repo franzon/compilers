@@ -1,5 +1,7 @@
 {Declaração de variáveis}
 inteiro: a
+flutuante: x,y,z
+flutuante: k
 
 inteiro principal()
 	inteiro: b
