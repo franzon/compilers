@@ -159,6 +159,76 @@ class TppGen:
 
         return self.builder.ret(expr)
 
+    def gen_if(self, root):
+
+        cond_block = self._traverse(root.children[0])
+        true_block = root.children[1]
+        false_block = root.children[2]
+
+        fn = self.module.get_global(self.current_scope)
+
+        if_true = fn.append_basic_block('iftrue')
+        if_false = fn.append_basic_block('iffalse')
+        if_end = fn.append_basic_block('ifend')
+
+        self.builder.cbranch(cond_block, if_true, if_false)
+
+        self.builder.position_at_end(if_true)
+        self._traverse(true_block)
+        self.builder.branch(if_end)
+
+        self.builder.position_at_end(if_false)
+        self._traverse(false_block)
+        self.builder.branch(if_end)
+
+        self.builder.position_at_end(if_end)
+
+    def gen_rel_op(self, root, op):
+
+        if op == '=':
+            op = '=='
+
+        elif op == '<>':
+            op = '!='
+
+        left = self._traverse(root.children[0])
+        right = self._traverse(root.children[1])
+
+        type_ = 'int'
+
+        if isinstance(left.type, ir.DoubleType) or isinstance(right.type, ir.DoubleType):
+            if isinstance(left.type, ir.IntType):
+                left = self.builder.sitofp(left, ir.DoubleType())
+            elif isinstance(right.type, ir.IntType):
+                right = self.builder.sitofp(right, ir.DoubleType())
+
+            type_ = 'double'
+
+        if type_ == 'int':
+            return self.builder.icmp_unsigned(op, left, right, "")
+
+        return self.builder.fcmp_ordered(op, left, right, "")
+
+    def gen_loop(self, root):
+
+        body_block = root.children[0]
+
+        fn = self.module.get_global(self.current_scope)
+
+        loop_body = fn.append_basic_block('loop_body')
+        loop_cond = fn.append_basic_block('loop_cond')
+        loop_end = fn.append_basic_block('loop_end')
+
+        self.builder.position_at_end(loop_body)
+        self._traverse(body_block)
+        self.builder.branch(loop_cond)
+
+        self.builder.position_at_end(loop_cond)
+        cond_block = self._traverse(root.children[1])
+        self.builder.cbranch(cond_block, loop_end, loop_body)
+
+        self.builder.position_at_end(loop_end)
+
     def _traverse(self, root):
         if root is not None:
 
@@ -173,6 +243,9 @@ class TppGen:
 
             elif root.value == '+' or root.value == '-' or root.value == '*' or root.value == '/':
                 return self.gen_op(root, root.value)
+
+            elif root.value == "<" or root.value == "<=" or root.value == '>' or root.value == '>=' or root.value == "=" or root.value == "<>":
+                return self.gen_rel_op(root, root.value)
 
             elif root.value == 'numero':
                 value = root.children[0].value
@@ -189,6 +262,12 @@ class TppGen:
 
             elif root.value == 'retorna':
                 return self.gen_return(root)
+
+            elif root.value == 'se':
+                return self.gen_if(root)
+
+            elif root.value == 'repita':
+                return self.gen_loop(root)
 
             for child in root.children:
                 if child is None:
