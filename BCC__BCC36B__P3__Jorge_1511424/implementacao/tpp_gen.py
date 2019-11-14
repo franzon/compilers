@@ -100,7 +100,51 @@ class TppGen:
 
         symbol = self.context.get_symbol(name, self.current_scope)
 
+        if isinstance(expr.type, ir.DoubleType) and symbol.type_ == "inteiro":
+            expr = self.builder.fptosi(expr, ir.IntType(32))
+
+        elif isinstance(expr.type, ir.IntType) and symbol.type_ == "flutuante":
+            expr = self.builder.sitofp(expr, ir.DoubleType())
+
         self.builder.store(expr, symbol.llvm_ref)
+
+    def gen_op(self, root, op):
+        left = self._traverse(root.children[0])
+        right = self._traverse(root.children[1])
+
+        type_ = 'int'
+
+        if isinstance(left.type, ir.DoubleType) or isinstance(right.type, ir.DoubleType):
+            if isinstance(left.type, ir.IntType):
+                left = self.builder.sitofp(left, ir.DoubleType())
+            elif isinstance(right.type, ir.IntType):
+                right = self.builder.sitofp(right, ir.DoubleType())
+
+            type_ = 'double'
+
+        if op == '+':
+            if type_ == 'int':
+                return self.builder.add(left, right, "")
+
+            return self.builder.fadd(left, right, "")
+
+        elif op == '-':
+            if type_ == 'int':
+                return self.builder.sub(left, right, "")
+
+            return self.builder.fsub(left, right, "")
+
+        elif op == '*':
+            if type_ == 'int':
+                return self.builder.mul(left, right, "")
+
+            return self.builder.fmul(left, right, "")
+
+        elif op == '/':
+            if type_ == 'int':
+                return self.builder.sdiv(left, right, "")
+
+            return self.builder.fdiv(left, right, "")
 
     def _traverse(self, root):
         if root is not None:
@@ -113,6 +157,9 @@ class TppGen:
 
             elif root.value == 'atribuicao':
                 return self.gen_assignment(root)
+
+            elif root.value == '+' or root.value == '-' or root.value == '*' or root.value == '/':
+                return self.gen_op(root, root.value)
 
             elif root.value == 'numero':
                 value = root.children[0].value

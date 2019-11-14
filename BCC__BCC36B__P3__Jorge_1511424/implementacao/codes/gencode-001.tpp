@@ -6,8 +6,7 @@ flutuante: k
 inteiro principal()
 	inteiro: b
 	
-	a := 33
-	a := 10 
+	a := 1 + 2.0 + 3 / 3 * 3.2 - 2
 
 	b := a 
 	
