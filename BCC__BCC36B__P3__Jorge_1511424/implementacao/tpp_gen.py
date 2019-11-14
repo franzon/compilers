@@ -146,6 +146,19 @@ class TppGen:
 
             return self.builder.fdiv(left, right, "")
 
+    def gen_return(self, root):
+        expr = self._traverse(root.children[0])
+
+        fn_symbol = self.context.get_symbol(self.current_scope, "@global")
+
+        if isinstance(expr.type, ir.DoubleType) and fn_symbol.type_ == "inteiro":
+            expr = self.builder.fptosi(expr, ir.IntType(32))
+
+        elif isinstance(expr.type, ir.IntType) and fn_symbol.type_ == "flutuante":
+            expr = self.builder.sitofp(expr, ir.DoubleType())
+
+        return self.builder.ret(expr)
+
     def _traverse(self, root):
         if root is not None:
 
@@ -173,6 +186,9 @@ class TppGen:
                 symbol = self.context.get_symbol(name, self.current_scope)
 
                 return self.builder.load(symbol.llvm_ref, "")
+
+            elif root.value == 'retorna':
+                return self.gen_return(root)
 
             for child in root.children:
                 if child is None:
