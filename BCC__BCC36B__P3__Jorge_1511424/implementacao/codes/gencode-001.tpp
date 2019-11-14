@@ -6,9 +6,10 @@ flutuante: k
 inteiro principal()
 	inteiro: b
 	
-	a := 10
+	a := 33
+	a := 10 
 
 	b := a 
 	
-    retorna(0)
+    retorna(0.4)
 fim

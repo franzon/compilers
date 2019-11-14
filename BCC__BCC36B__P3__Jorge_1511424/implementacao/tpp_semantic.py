@@ -19,9 +19,10 @@ class VarSymbol(Symbol):
         self.initialized = False
         self.used = False
         self.parameter = parameter
+        self.llvm_ref = None
 
     def __str__(self):
-        return '{} [symbol] ({}) [{}] [{}] -> {}'.format(self.scope, self.name, self.dimensions, self.dimension_list,self.type_)
+        return '{} [symbol] ({}) [{}]  -> {}'.format(self.scope, self.name, self.dimensions, self.type_)
 
 
 class FunctionSymbol(Symbol):
@@ -31,7 +32,7 @@ class FunctionSymbol(Symbol):
         self.returned = False
 
     def __str__(self):
-        return '{} [function] ({}) {} -> {}'.format(self.scope, self.name, self.type_)
+        return '{} [function] ({})  -> {}'.format(self.scope, self.name, self.type_)
 
 
 class MyException(Exception):
@@ -133,7 +134,6 @@ class TppSemantic:
         if self.context.get_symbol(name, '@global') is None:
             sym = FunctionSymbol(
                 name, type_, '@global')
-
 
             for param in parameter_list:
                 var_symbol = VarSymbol(
@@ -404,7 +404,8 @@ class TppSemantic:
                         'indice', var.children[1])
                     dimensions = len(index_list)
 
-                index_list = list(map(lambda k: k.children[0].value, index_list))
+                index_list = list(
+                    map(lambda k: k.children[0].value, index_list))
 
                 symbol = self.context.get_symbol(
                     name, self.current_scope)

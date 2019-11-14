@@ -52,9 +52,11 @@ class TppGen:
                     g = ir.GlobalVariable(self.module, type_, symbol.name)
                     g.linkage = 'common'
                     g.align = 4
+                    symbol.llvm_ref = g
                 else:
                     a = self.builder.alloca(type_, name=symbol.name)
                     a.align = 4
+                    symbol.llvm_ref = a
 
     @classmethod
     def type_to_llvmlite_type(cls, type, dimensions):
@@ -92,14 +94,38 @@ class TppGen:
 
         self.current_scope = '@global'
 
+    def gen_assignment(self, root):
+        name = root.children[0].children[0].value
+        expr = self._traverse(root.children[1])
+
+        symbol = self.context.get_symbol(name, self.current_scope)
+
+        self.builder.store(expr, symbol.llvm_ref)
+
     def _traverse(self, root):
         if root is not None:
 
             if root.value == 'declaracao_funcao':
-                self.gen_function_declaration(root)
+                return self.gen_function_declaration(root)
 
             elif root.value == 'declaracao_variaveis':
-                self.gen_variable_declaration(root)
+                return self.gen_variable_declaration(root)
+
+            elif root.value == 'atribuicao':
+                return self.gen_assignment(root)
+
+            elif root.value == 'numero':
+                value = root.children[0].value
+                if isinstance(value, int):
+                    return ir.Constant(ir.IntType(32), value)
+                elif isinstance(value, float):
+                    return ir.Constant(ir.DoubleType(), value)
+
+            elif root.value == 'var':
+                name = root.children[0].value
+                symbol = self.context.get_symbol(name, self.current_scope)
+
+                return self.builder.load(symbol.llvm_ref, "")
 
             for child in root.children:
                 if child is None:
