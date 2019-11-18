@@ -161,7 +161,6 @@ class TppGen:
 
     def gen_if(self, root):
 
-        cond_block = self._traverse(root.children[0])
         true_block = root.children[1]
         false_block = root.children[2]
 
@@ -170,6 +169,8 @@ class TppGen:
         if_true = fn.append_basic_block('iftrue')
         if_false = fn.append_basic_block('iffalse')
         if_end = fn.append_basic_block('ifend')
+
+        cond_block = self._traverse(root.children[0])
 
         self.builder.cbranch(cond_block, if_true, if_false)
 
@@ -229,6 +230,15 @@ class TppGen:
 
         self.builder.position_at_end(loop_end)
 
+    def gen_logical_op(self, root, op):
+        left = self.gen_rel_op(root.children[0], root.children[0].value)
+        right = self.gen_rel_op(root.children[1], root.children[1].value)
+
+        if op == '&&':
+            return self.builder.and_(left, right)
+
+        return self.builder.or_(left, right)
+
     def _traverse(self, root):
         if root is not None:
 
@@ -247,6 +257,9 @@ class TppGen:
             elif root.value == "<" or root.value == "<=" or root.value == '>' or root.value == '>=' or root.value == "=" or root.value == "<>":
                 return self.gen_rel_op(root, root.value)
 
+            elif root.value == '&&' or root.value == "||":
+                return self.gen_logical_op(root, root.value)
+
             elif root.value == 'numero':
                 value = root.children[0].value
                 if isinstance(value, int):
@@ -257,6 +270,20 @@ class TppGen:
             elif root.value == 'var':
                 name = root.children[0].value
                 symbol = self.context.get_symbol(name, self.current_scope)
+
+                if symbol.parameter:
+
+                    fn = self.module.get_global(symbol.scope)
+                    i = 0
+
+                    for var_symbol in self.context.symbols:
+                        if isinstance(var_symbol, VarSymbol) and var_symbol.scope == fn.name and var_symbol.parameter:
+                            if var_symbol.name == name:
+                                break
+                            i += 1
+
+                    fn.args[i].name = name
+                    return fn.args[i]
 
                 return self.builder.load(symbol.llvm_ref, "")
 
