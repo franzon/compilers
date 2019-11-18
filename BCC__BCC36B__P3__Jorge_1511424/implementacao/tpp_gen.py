@@ -34,6 +34,12 @@ class TppGen:
                 t_func = ir.FunctionType(type_, parameters)
                 func = ir.Function(self.module, t_func, name=fn_symbol.name)
 
+                i = 0
+                for var_symbol in self.context.symbols:
+                    if isinstance(var_symbol, VarSymbol) and var_symbol.scope == fn_symbol.name and var_symbol.parameter:
+                        func.args[i].name = var_symbol.name
+                        i += 1
+
     def gen_variable_declaration(self, root):
 
         variable_list = TppSemantic.tree_to_list(
@@ -239,6 +245,33 @@ class TppGen:
 
         return self.builder.or_(left, right)
 
+    def gen_function_call(self, root):
+        name = root.children[0].value
+        args_node = root.children[1]
+
+        fn = self.module.get_global(name)
+
+        args = []
+
+        if len(args_node.children) > 0 and args_node.children != [None]:
+
+            def extract_args(root):
+                if root.value == 'lista_argumentos':
+                    if len(root.children) == 1:
+                        return [self._traverse(root.children[0])]
+                    elif root.children[0].value != 'lista_argumentos':
+                        return [self._traverse(root.children[0]), self._traverse(root.children[1])]
+                    else:
+                        return extract_args(root.children[0]) + [self._traverse(root.children[1])]
+
+                return root
+
+            args = extract_args(args_node)
+
+        print('args', args, type(args))
+
+        return self.builder.call(fn, args)
+
     def _traverse(self, root):
         if root is not None:
 
@@ -282,7 +315,6 @@ class TppGen:
                                 break
                             i += 1
 
-                    fn.args[i].name = name
                     return fn.args[i]
 
                 return self.builder.load(symbol.llvm_ref, "")
@@ -295,6 +327,9 @@ class TppGen:
 
             elif root.value == 'repita':
                 return self.gen_loop(root)
+
+            elif root.value == 'chamada_funcao':
+                return self.gen_function_call(root)
 
             for child in root.children:
                 if child is None:
