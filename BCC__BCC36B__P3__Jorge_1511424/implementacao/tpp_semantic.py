@@ -188,6 +188,9 @@ class TppSemantic:
 
             arg_list = TppSemantic.tree_to_list('lista_argumentos', arg_list)
 
+            for node in arg_list:
+                self._traverse(node)
+
             parameter_list = list(filter(lambda k: k.scope == name and isinstance(
                 k, VarSymbol) and k.parameter, self.context.symbols))
 
@@ -378,6 +381,7 @@ class TppSemantic:
                     return 'inteiro'
 
     def _traverse(self, node):
+
         if node.value == 'programa':
             self._traverse(node.children[0])
 
@@ -530,6 +534,7 @@ class TppSemantic:
             self.verify_function_call(name, arg_list)
 
         elif node.value == 'var':
+            print(node)
             self.verify_var(node)
 
         elif node.value == 'indice':
@@ -553,6 +558,10 @@ class TppSemantic:
 
         elif node.value == 'leia':
             self._traverse(node.children[0])
+
+        else:
+            for child in node.children:
+                self._traverse(child)
 
     def _prune(self, node):
 

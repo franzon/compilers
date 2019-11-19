@@ -10,6 +10,7 @@ inteiro principal()
 
 	leia(a)
 	leia(b)
+	
 
 	c := soma(a, b)
 

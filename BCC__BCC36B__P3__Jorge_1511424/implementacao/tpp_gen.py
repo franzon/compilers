@@ -34,12 +34,6 @@ class TppGen:
                 t_func = ir.FunctionType(type_, parameters)
                 func = ir.Function(self.module, t_func, name=fn_symbol.name)
 
-                i = 0
-                for var_symbol in self.context.symbols:
-                    if isinstance(var_symbol, VarSymbol) and var_symbol.scope == fn_symbol.name and var_symbol.parameter:
-                        func.args[i].name = var_symbol.name
-                        i += 1
-
     def gen_variable_declaration(self, root):
 
         variable_list = TppSemantic.tree_to_list(
@@ -95,6 +89,21 @@ class TppGen:
         self.current_scope = name
         entryBlock = fn.append_basic_block('entry')
         self.builder = ir.IRBuilder(entryBlock)
+
+        i = 0
+        for var_symbol in self.context.symbols:
+            if isinstance(var_symbol, VarSymbol) and var_symbol.used and var_symbol.scope == fn.name and var_symbol.parameter:
+                fn.args[i].name = var_symbol.name
+
+                type_ = self.type_to_llvmlite_type(
+                    var_symbol.type_, 0)
+
+                a = self.builder.alloca(type_, name=var_symbol.name)
+                self.builder.store(fn.args[i], a)
+                a.align = 4
+                var_symbol.llvm_ref = a
+
+                i += 1
 
         self._traverse(body)
 
@@ -167,28 +176,55 @@ class TppGen:
 
     def gen_if(self, root):
 
-        true_block = root.children[1]
-        false_block = root.children[2]
+        if len(root.children) == 2:
+            true_block = root.children[1]
+            fn = self.module.get_global(self.current_scope)
 
-        fn = self.module.get_global(self.current_scope)
+            if_true = fn.append_basic_block('iftrue')
+            if_end = fn.append_basic_block('ifend')
 
-        if_true = fn.append_basic_block('iftrue')
-        if_false = fn.append_basic_block('iffalse')
-        if_end = fn.append_basic_block('ifend')
+            cond_block = self._traverse(root.children[0])
 
-        cond_block = self._traverse(root.children[0])
+            self.builder.cbranch(cond_block, if_true, if_end)
 
-        self.builder.cbranch(cond_block, if_true, if_false)
+            self.builder.position_at_end(if_true)
+            self._traverse(true_block)
 
-        self.builder.position_at_end(if_true)
-        self._traverse(true_block)
-        self.builder.branch(if_end)
+            if not self.builder.block.is_terminated:
+                self.builder.branch(if_end)
 
-        self.builder.position_at_end(if_false)
-        self._traverse(false_block)
-        self.builder.branch(if_end)
+            if not self.builder.block.is_terminated:
+                self.builder.branch(if_end)
 
-        self.builder.position_at_end(if_end)
+            self.builder.position_at_end(if_end)
+        else:
+
+            true_block = root.children[1]
+            false_block = root.children[2]
+
+            fn = self.module.get_global(self.current_scope)
+
+            if_true = fn.append_basic_block('iftrue')
+            if_false = fn.append_basic_block('iffalse')
+            if_end = fn.append_basic_block('ifend')
+
+            cond_block = self._traverse(root.children[0])
+
+            self.builder.cbranch(cond_block, if_true, if_false)
+
+            self.builder.position_at_end(if_true)
+            self._traverse(true_block)
+
+            if not self.builder.block.is_terminated:
+                self.builder.branch(if_end)
+
+            self.builder.position_at_end(if_false)
+            self._traverse(false_block)
+
+            if not self.builder.block.is_terminated:
+                self.builder.branch(if_end)
+
+            self.builder.position_at_end(if_end)
 
     def gen_rel_op(self, root, op):
 
@@ -237,8 +273,8 @@ class TppGen:
         self.builder.position_at_end(loop_end)
 
     def gen_logical_op(self, root, op):
-        left = self.gen_rel_op(root.children[0], root.children[0].value)
-        right = self.gen_rel_op(root.children[1], root.children[1].value)
+        left = self._traverse(root.children[0])
+        right = self._traverse(root.children[1])
 
         if op == '&&':
             return self.builder.and_(left, right)
@@ -268,9 +304,19 @@ class TppGen:
 
             args = extract_args(args_node)
 
-        print('args', args, type(args))
+        i = 0
+        for var_symbol in self.context.symbols:
+            if isinstance(var_symbol, VarSymbol) and var_symbol.scope == fn.name and var_symbol.parameter:
+                if isinstance(self.type_to_llvmlite_type(var_symbol.type_, 0), ir.IntType) and isinstance(args[i].type, ir.DoubleType):
+                    args[i] = self.builder.fptosi(args[i])
+                elif isinstance(self.type_to_llvmlite_type(var_symbol.type_, 0), ir.DoubleType) and isinstance(args[i].type, ir.IntType):
+                    args[i] = self.builder.sitofp(args[i], ir.DoubleType())
+                i += 1
 
         return self.builder.call(fn, args)
+
+    def gen_not_op(self, root):
+        return self.builder.not_(self._traverse(root.children[0]))
 
     def _traverse(self, root):
         if root is not None:
@@ -293,6 +339,9 @@ class TppGen:
             elif root.value == '&&' or root.value == "||":
                 return self.gen_logical_op(root, root.value)
 
+            elif root.value == '!':
+                return self.gen_not_op(root)
+
             elif root.value == 'numero':
                 value = root.children[0].value
                 if isinstance(value, int):
@@ -304,19 +353,18 @@ class TppGen:
                 name = root.children[0].value
                 symbol = self.context.get_symbol(name, self.current_scope)
 
-                if symbol.parameter:
+                # if symbol.parameter:
 
-                    fn = self.module.get_global(symbol.scope)
-                    i = 0
+                #     fn = self.module.get_global(symbol.scope)
+                #     i = 0
 
-                    for var_symbol in self.context.symbols:
-                        if isinstance(var_symbol, VarSymbol) and var_symbol.scope == fn.name and var_symbol.parameter:
-                            if var_symbol.name == name:
-                                break
-                            i += 1
+                #     for var_symbol in self.context.symbols:
+                #         if isinstance(var_symbol, VarSymbol) and var_symbol.scope == fn.name and var_symbol.parameter:
+                #             if var_symbol.name == name:
+                #                 break
+                #             i += 1
 
-                    return fn.args[i]
-
+                #     return fn.args[i]
                 return self.builder.load(symbol.llvm_ref, "")
 
             elif root.value == 'retorna':
