@@ -15,44 +15,47 @@ class TppGen:
 
     def generate(self):
 
-        self.binding.initialize()
-        self.binding.initialize_native_target()
-        self.binding.initialize_native_asmprinter()
+        try:
+            self.binding.initialize()
+            self.binding.initialize_native_target()
+            self.binding.initialize_native_asmprinter()
 
-        self.binding.load_library_permanently('./io.so')
+            self.binding.load_library_permanently('./io.so')
 
-        self.module = ir.Module('module')
-        self.module.triple = self.binding.get_default_triple()
+            self.module = ir.Module('module')
+            self.module.triple = self.binding.get_default_triple()
 
-        target = self.binding.Target.from_default_triple()
-        target_machine = target.create_target_machine()
-        backing_mod = binding.parse_assembly("")
-        engine = binding.create_mcjit_compiler(backing_mod, target_machine)
-        self.engine = engine
+            target = self.binding.Target.from_default_triple()
+            target_machine = target.create_target_machine()
+            backing_mod = binding.parse_assembly("")
+            engine = binding.create_mcjit_compiler(backing_mod, target_machine)
+            self.engine = engine
 
-        self.builder = None
+            self.builder = None
 
-        self.declare_runtime_functions()
+            self.declare_runtime_functions()
 
-        self.declare_functions(self.tree)
-        self._traverse(self.tree)
+            self.declare_functions(self.tree)
+            self._traverse(self.tree)
 
-        # print(self.module)
+            # print(self.module)
 
-        main = self.module.get_global("principal")
-        main.name = "main"
+            main = self.module.get_global("principal")
+            main.name = "main"
 
-        llvm_ir = str(self.module)
+            llvm_ir = str(self.module)
 
-        print(llvm_ir)
-        mod = self.binding.parse_assembly(llvm_ir)
-        mod.verify()
-        self.engine.add_module(mod)
-        self.engine.finalize_object()
-        self.engine.run_static_constructors()
+            print(llvm_ir)
+            mod = self.binding.parse_assembly(llvm_ir)
+            mod.verify()
+            self.engine.add_module(mod)
+            self.engine.finalize_object()
+            self.engine.run_static_constructors()
 
-        with open('out.ll', 'w') as out:
-            out.write(llvm_ir)
+            with open('out.ll', 'w') as out:
+                out.write(llvm_ir)
+        except:
+            print("Erro ao gerar código")
 
     def declare_runtime_functions(self):
         t_escrevaInteiro = ir.FunctionType(ir.VoidType(), [ir.IntType(32)])
@@ -166,6 +169,15 @@ class TppGen:
             self.builder.ret_void()
 
         self.current_scope = '@global'
+
+        if self.last_block:
+            if fn_symbol.type_ == "vazio":
+                self.builder.ret_void()
+            elif fn_symbol.type_ == "inteiro":
+                self.builder.ret(ir.Constant(ir.IntType(32), 0))
+            else:
+                self.builder.ret(ir.Constant(ir.DoubleType(), 0.0))
+            self.last_block = None
 
     def gen_assignment(self, root):
         name = root.children[0].children[0].value

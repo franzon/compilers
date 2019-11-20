@@ -6,8 +6,8 @@ inteiro modulo(inteiro:numerador, inteiro: denominador)
 	fim
 
 	repita
-		numerador := numerador - denominador
-	até (numerador <= denominador)
+		numerador := numerador - denominador 
+	até (numerador < denominador)
 
 	retorna(numerador)
 fim
