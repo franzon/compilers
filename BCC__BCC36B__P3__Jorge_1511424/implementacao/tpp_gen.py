@@ -1,4 +1,4 @@
-from llvmlite import ir
+from llvmlite import ir, binding
 from tpp_semantic import TppSemantic, FunctionSymbol, VarSymbol
 
 
@@ -7,16 +7,69 @@ class TppGen:
         self.tree = tree
         self.context = context
         self.module = None
+        self.engine = None
+        self.binding = binding
         self.current_scope = '@global'
+        self.runtime_functions = {}
+        self.last_block = None
 
     def generate(self):
+
+        self.binding.initialize()
+        self.binding.initialize_native_target()
+        self.binding.initialize_native_asmprinter()
+
+        self.binding.load_library_permanently('./io.so')
+
         self.module = ir.Module('module')
+        self.module.triple = self.binding.get_default_triple()
+
+        target = self.binding.Target.from_default_triple()
+        target_machine = target.create_target_machine()
+        backing_mod = binding.parse_assembly("")
+        engine = binding.create_mcjit_compiler(backing_mod, target_machine)
+        self.engine = engine
+
         self.builder = None
+
+        self.declare_runtime_functions()
 
         self.declare_functions(self.tree)
         self._traverse(self.tree)
 
-        print(self.module)
+        # print(self.module)
+
+        main = self.module.get_global("principal")
+        main.name = "main"
+
+        llvm_ir = str(self.module)
+
+        print(llvm_ir)
+        mod = self.binding.parse_assembly(llvm_ir)
+        mod.verify()
+        self.engine.add_module(mod)
+        self.engine.finalize_object()
+        self.engine.run_static_constructors()
+
+        with open('out.ll', 'w') as out:
+            out.write(llvm_ir)
+
+    def declare_runtime_functions(self):
+        t_escrevaInteiro = ir.FunctionType(ir.VoidType(), [ir.IntType(32)])
+        self.runtime_functions["escrevaInteiro"] = ir.Function(
+            self.module, t_escrevaInteiro, name="escrevaInteiro")
+
+        t_escrevaFlutuante = ir.FunctionType(ir.VoidType(), [ir.DoubleType()])
+        self.runtime_functions["escrevaFlutuante"] = ir.Function(
+            self.module, t_escrevaFlutuante, name="escrevaFlutuante")
+
+        t_leiaInteiro = ir.FunctionType(ir.IntType(32), [])
+        self.runtime_functions["leiaInteiro"] = ir.Function(
+            self.module, t_leiaInteiro, name="leiaInteiro")
+
+        t_leiaFlutuante = ir.FunctionType(ir.DoubleType(), [])
+        self.runtime_functions["leiaFlutuante"] = ir.Function(
+            self.module, t_leiaFlutuante, name="leiaFlutuante")
 
     def declare_functions(self, node):
         for fn_symbol in self.context.symbols:
@@ -50,6 +103,7 @@ class TppGen:
 
                 if symbol.scope == '@global':
                     g = ir.GlobalVariable(self.module, type_, symbol.name)
+                    g.initializer = ir.Constant(type_, 0)
                     g.linkage = 'common'
                     g.align = 4
                     symbol.llvm_ref = g
@@ -106,6 +160,10 @@ class TppGen:
                 i += 1
 
         self._traverse(body)
+
+        fn_symbol = self.context.get_symbol(name, '@global')
+        if fn_symbol.type_ == "vazio":
+            self.builder.ret_void()
 
         self.current_scope = '@global'
 
@@ -208,6 +266,8 @@ class TppGen:
             if_false = fn.append_basic_block('iffalse')
             if_end = fn.append_basic_block('ifend')
 
+            self.last_block = if_end
+
             cond_block = self._traverse(root.children[0])
 
             self.builder.cbranch(cond_block, if_true, if_false)
@@ -224,7 +284,7 @@ class TppGen:
             if not self.builder.block.is_terminated:
                 self.builder.branch(if_end)
 
-            self.builder.position_at_end(if_end)
+            self.builder.position_at_start(if_end)
 
     def gen_rel_op(self, root, op):
 
@@ -262,7 +322,20 @@ class TppGen:
         loop_cond = fn.append_basic_block('loop_cond')
         loop_end = fn.append_basic_block('loop_end')
 
+        self.builder.branch(loop_body)
+
         self.builder.position_at_end(loop_body)
+
+        if self.last_block:
+            print('gen_loop')
+            current_block = self.builder.block
+
+            self.builder.position_at_end(self.last_block)
+            self.builder.branch(current_block)
+
+            self.builder.position_at_end(current_block)
+            self.last_block = None
+
         self._traverse(body_block)
         self.builder.branch(loop_cond)
 
@@ -318,6 +391,28 @@ class TppGen:
     def gen_not_op(self, root):
         return self.builder.not_(self._traverse(root.children[0]))
 
+    def gen_io_function(self, root):
+        if root.value == 'leia':
+            var = root.children[0].children[0].value
+            symbol = self.context.get_symbol(var, self.current_scope)
+
+            ret = None
+            if symbol.type_ == "inteiro":
+                ret = self.builder.call(
+                    self.runtime_functions["leiaInteiro"], [])
+            elif symbol.type_ == "flutuante":
+                ret = self.builder.call(
+                    self.runtime_functions["leiaFlutuante"], [])
+
+            return self.builder.store(ret, symbol.llvm_ref)
+        elif root.value == 'escreva':
+            var = self._traverse(root.children[0])
+            print("to escreveni", var.type)
+            if str(var.type) == 'i32':
+                return self.builder.call(self.runtime_functions["escrevaInteiro"], [var])
+            else:
+                return self.builder.call(self.runtime_functions["escrevaFlutuante"], [var])
+
     def _traverse(self, root):
         if root is not None:
 
@@ -353,18 +448,6 @@ class TppGen:
                 name = root.children[0].value
                 symbol = self.context.get_symbol(name, self.current_scope)
 
-                # if symbol.parameter:
-
-                #     fn = self.module.get_global(symbol.scope)
-                #     i = 0
-
-                #     for var_symbol in self.context.symbols:
-                #         if isinstance(var_symbol, VarSymbol) and var_symbol.scope == fn.name and var_symbol.parameter:
-                #             if var_symbol.name == name:
-                #                 break
-                #             i += 1
-
-                #     return fn.args[i]
                 return self.builder.load(symbol.llvm_ref, "")
 
             elif root.value == 'retorna':
@@ -378,6 +461,9 @@ class TppGen:
 
             elif root.value == 'chamada_funcao':
                 return self.gen_function_call(root)
+
+            elif root.value == 'escreva' or root.value == 'leia':
+                return self.gen_io_function(root)
 
             for child in root.children:
                 if child is None:

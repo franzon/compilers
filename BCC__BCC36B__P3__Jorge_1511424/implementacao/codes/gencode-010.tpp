@@ -12,6 +12,7 @@ inteiro fatorial(inteiro: n)
     senão
         retorna(0)
     fim
+    n := 2
 fim
 
 inteiro principal()
