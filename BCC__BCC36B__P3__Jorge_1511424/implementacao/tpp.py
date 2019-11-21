@@ -34,5 +34,5 @@ semantic.traverse()
 semantic.print_symbols()
 semantic.prune()
 
-gen = tpp_gen.TppGen(semantic.tree, semantic.context)
-gen.generate()
+# gen = tpp_gen.TppGen(semantic.tree, semantic.context)
+# gen.generate()

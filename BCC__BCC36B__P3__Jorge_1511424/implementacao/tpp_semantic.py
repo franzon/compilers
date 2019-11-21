@@ -64,6 +64,8 @@ class TppSemantic:
         self.current_scope = '@global'
         self.graph = Digraph(comment='Análise sintática')
 
+        self.undefined_symbols = []
+
     def traverse(self):
         print('\n====================\nExecutando análise semântica...\n')
         try:
@@ -214,11 +216,12 @@ class TppSemantic:
         name = var.children[0].value
         symbol = self.context.get_symbol(name, self.current_scope)
 
-        if symbol is None:
+        if symbol is None and name not in self.undefined_symbols:
             print(
                 'Erro: Variável ‘{}’ não declarada.'.format(name))
+            self.undefined_symbols.append(name)
 
-        else:
+        elif symbol is not None:
             symbol.used = True
 
             if assigning:
@@ -534,7 +537,6 @@ class TppSemantic:
             self.verify_function_call(name, arg_list)
 
         elif node.value == 'var':
-            print(node)
             self.verify_var(node)
 
         elif node.value == 'indice':

@@ -339,7 +339,6 @@ class TppGen:
         self.builder.position_at_end(loop_body)
 
         if self.last_block:
-            print('gen_loop')
             current_block = self.builder.block
 
             self.builder.position_at_end(self.last_block)
@@ -419,7 +418,6 @@ class TppGen:
             return self.builder.store(ret, symbol.llvm_ref)
         elif root.value == 'escreva':
             var = self._traverse(root.children[0])
-            print("to escreveni", var.type)
             if str(var.type) == 'i32':
                 return self.builder.call(self.runtime_functions["escrevaInteiro"], [var])
             else:
