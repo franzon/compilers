@@ -3,6 +3,7 @@ inteiro: B[1024]
 
 inteiro principal()
     inteiro: a
+    inteiro: i
     i := 0
 
     repita

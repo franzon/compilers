@@ -12,17 +12,17 @@ class Symbol:
 
 
 class VarSymbol(Symbol):
-    def __init__(self, name, type_, scope, dimensions=0, dimension_list=[], parameter=False):
+    def __init__(self, name, type_, scope, dimensions=0, index_list=[], parameter=False):
         super().__init__(name, type_, scope)
         self.dimensions = dimensions
-        self.dimension_list = dimension_list
+        self.index_list = index_list
         self.initialized = False
         self.used = False
         self.parameter = parameter
         self.llvm_ref = None
 
     def __str__(self):
-        return '{} [symbol] ({}) [{}]  -> {}'.format(self.scope, self.name, self.dimensions, self.type_)
+        return '{} [symbol] ({}) [{}]  -> {} --> {}'.format(self.scope, self.name, self.dimensions, self.type_, self.index_list)
 
 
 class FunctionSymbol(Symbol):
@@ -94,7 +94,7 @@ class TppSemantic:
         variables = list(filter(lambda k: isinstance(
             k, VarSymbol), self.context.symbols))
         variables = list(
-            map(lambda k: [k.scope, k.type_, k.name, k.dimensions, k.initialized, k.used, k.parameter], variables))
+            map(lambda k: [k.scope, k.type_, k.name, k.dimensions, k.initialized, k.used, k.parameter, k.index_list], variables))
 
         print('\nFunções: \n')
         print(tabulate(functions, headers=[
@@ -102,7 +102,7 @@ class TppSemantic:
 
         print('\nVariáveis: \n')
         print(tabulate(variables, headers=[
-              'Escopo', 'Tipo', 'Nome', 'Dimensões', 'Inicializado', 'Utilizado', 'Parâmetro']))
+              'Escopo', 'Tipo', 'Nome', 'Dimensões', 'Inicializado', 'Utilizado', 'Parâmetro', 'Lista índices']))
 
     def check_main_function(self):
         main = self.context.get_symbol('principal', '@global')
@@ -245,6 +245,7 @@ class TppSemantic:
 
                 index_list = TppSemantic.tree_to_list(
                     'indice', var.children[1])
+
                 index_types = list(map(self.get_expression_type, index_list))
 
                 if symbol.dimensions == 0:
@@ -316,7 +317,7 @@ class TppSemantic:
                     map(cls.get_parameter, parameter_nodes))
 
     @classmethod
-    def get_function_body(self, function_declaration):
+    def get_function_body(cls, function_declaration):
         for node in function_declaration.children:
             if node.value == 'cabecalho':
                 return node.children[2]
@@ -404,6 +405,9 @@ class TppSemantic:
                 name = var.children[0].value
                 dimensions = 0
 
+                symbol = self.context.get_symbol(
+                    name, self.current_scope)
+
                 index_list = []
 
                 if len(var.children) > 1:
@@ -411,11 +415,16 @@ class TppSemantic:
                         'indice', var.children[1])
                     dimensions = len(index_list)
 
+                    for index in index_list:
+                        if self.get_expression_type(index) != 'inteiro':
+                            print(
+                                'Erro: Índice de array ‘{}’ não inteiro.'.format(name))
+
+                for i in range(len(index_list)):
+                    index_list[i] = self._prune(index_list[i])
+
                 index_list = list(
                     map(lambda k: k.children[0].value, index_list))
-
-                symbol = self.context.get_symbol(
-                    name, self.current_scope)
 
                 if symbol is None:
                     self.context.add_symbol(
