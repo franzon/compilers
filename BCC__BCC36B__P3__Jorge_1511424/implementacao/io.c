@@ -5,9 +5,9 @@ void escrevaInteiro(int ni)
     printf("%d\n", ni);
 }
 
-void escrevaFlutuante(float nf)
+void escrevaFlutuante(double nf)
 {
-    printf("%f\n", nf);
+    printf("%lf\n", nf);
 }
 
 int leiaInteiro()
@@ -17,9 +17,9 @@ int leiaInteiro()
     return num;
 }
 
-float leiaFlutuante()
+double leiaFlutuante()
 {
-    float num;
-    scanf("%f", &num);
+    double num;
+    scanf("%lf", &num);
     return num;
 }

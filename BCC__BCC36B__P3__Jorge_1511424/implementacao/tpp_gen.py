@@ -1,5 +1,6 @@
 from llvmlite import ir, binding
 from tpp_semantic import TppSemantic, FunctionSymbol, VarSymbol
+from copy import deepcopy
 
 
 class TppGen:
@@ -77,10 +78,10 @@ class TppGen:
                 for var_symbol in self.context.symbols:
                     if isinstance(var_symbol, VarSymbol) and var_symbol.scope == fn_symbol.name and var_symbol.parameter:
                         parameters.append(self.type_to_llvmlite_type(
-                            var_symbol.type_, var_symbol.dimensions))
+                            var_symbol.type_, var_symbol.index_list))
 
                 type_ = self.type_to_llvmlite_type(
-                    fn_symbol.type_, 0)
+                    fn_symbol.type_, [])
                 t_func = ir.FunctionType(type_, parameters)
                 func = ir.Function(self.module, t_func, name=fn_symbol.name)
 
@@ -95,22 +96,55 @@ class TppGen:
             symbol = self.context.get_symbol(name, self.current_scope)
 
             if symbol:
-                type_ = self.type_to_llvmlite_type(
-                    symbol.type_, 0)
 
-                if symbol.scope == '@global':
-                    g = ir.GlobalVariable(self.module, type_, symbol.name)
-                    g.initializer = ir.Constant(type_, 0)
-                    g.linkage = 'common'
-                    g.align = 4
-                    symbol.llvm_ref = g
+                if len(var.children) == 1:
+                    type_ = self.type_to_llvmlite_type(
+                        symbol.type_, symbol.index_list)
+
+                    if symbol.scope == '@global':
+                        g = ir.GlobalVariable(self.module, type_, symbol.name)
+                        g.initializer = ir.Constant(type_, 0)
+                        g.linkage = 'common'
+                        g.align = 4
+                        symbol.llvm_ref = g
+                    else:
+                        a = self.builder.alloca(type_, name=symbol.name)
+                        a.align = 4
+                        symbol.llvm_ref = a
                 else:
-                    a = self.builder.alloca(type_, name=symbol.name)
-                    a.align = 4
-                    symbol.llvm_ref = a
+                    type_ = self.type_to_llvmlite_type(
+                        symbol.type_, symbol.index_list)
+
+                    print(self.build_array_initializer(
+                        symbol))
+
+                    if symbol.scope == '@global':
+                        g = ir.GlobalVariable(
+                            self.module, self.type_to_llvmlite_type(symbol.type_, symbol.index_list), symbol.name)
+                        g.linkage = 'common'
+                        g.initializer = self.build_array_initializer(symbol)
+                        g.align = 4
+                        symbol.llvm_ref = g
+
+                    else:
+                        a = self.builder.alloca(type_, name=symbol.name)
+                        a.align = 4
+                        symbol.llvm_ref = a
+
+    def build_array_initializer(self, symbol):
+        tmp_indexes = deepcopy(symbol.index_list)
+
+        tmp = [ir.Constant(self.type_to_llvmlite_type(
+            symbol.type_, []), 0)] * tmp_indexes.pop()
+
+        while len(tmp_indexes) > 0:
+            size = tmp_indexes.pop()
+            tmp = [ir.Constant.literal_array(tmp)] * size
+
+        return ir.Constant.literal_array(tmp)
 
     @classmethod
-    def type_to_llvmlite_type(cls, type, dimensions):
+    def type_to_llvmlite_type(cls, type, index_list):
 
         basic_type = None
         if type == 'inteiro':
@@ -120,15 +154,13 @@ class TppGen:
         else:
             basic_type = ir.VoidType()
 
-        if dimensions == 0:
+        if len(index_list) == 0:
             return basic_type
 
         else:
 
-            i = 0
-            while i < dimensions:
-                basic_type = ir.PointerType(basic_type)
-                i += 1
+            for size in index_list[::-1]:
+                basic_type = ir.ArrayType(basic_type, size)
 
             return basic_type
 
@@ -147,7 +179,7 @@ class TppGen:
                 fn.args[i].name = var_symbol.name
 
                 type_ = self.type_to_llvmlite_type(
-                    var_symbol.type_, 0)
+                    var_symbol.type_, var_symbol.index_list)
 
                 a = self.builder.alloca(type_, name=var_symbol.name)
                 self.builder.store(fn.args[i], a)
@@ -174,18 +206,44 @@ class TppGen:
             self.last_block = None
 
     def gen_assignment(self, root):
-        name = root.children[0].children[0].value
+
+        var_node = root.children[0]
+
         expr = self._traverse(root.children[1])
+        symbol = self.context.get_symbol(
+            var_node.children[0].value, self.current_scope)
 
-        symbol = self.context.get_symbol(name, self.current_scope)
+        if len(var_node.children) == 1:
 
-        if isinstance(expr.type, ir.DoubleType) and symbol.type_ == "inteiro":
-            expr = self.builder.fptosi(expr, ir.IntType(32))
+            if isinstance(expr.type, ir.DoubleType) and symbol.type_ == "inteiro":
+                expr = self.builder.fptosi(expr, ir.IntType(32))
 
-        elif isinstance(expr.type, ir.IntType) and symbol.type_ == "flutuante":
-            expr = self.builder.sitofp(expr, ir.DoubleType())
+            elif isinstance(expr.type, ir.IntType) and symbol.type_ == "flutuante":
+                expr = self.builder.sitofp(expr, ir.DoubleType())
 
-        self.builder.store(expr, symbol.llvm_ref)
+            self.builder.store(expr, symbol.llvm_ref)
+
+        else:
+
+            def find_indexes(root):
+                if root.value == "indice" and len(root.children) == 2:
+                    return find_indexes(root.children[0]) + [root.children[1]]
+                return [root]
+
+            indexes = find_indexes(var_node.children[1])
+            indexes = [ir.Constant(ir.IntType(32), 0)] + \
+                [self._traverse(i) for i in indexes]
+
+            print(symbol.llvm_ref)
+
+            ptr = self.builder.gep(symbol.llvm_ref, indexes, True)
+            if isinstance(expr.type, ir.DoubleType) and symbol.type_ == "inteiro":
+                expr = self.builder.fptosi(expr, ir.IntType(32))
+
+            elif isinstance(expr.type, ir.IntType) and symbol.type_ == "flutuante":
+                expr = self.builder.sitofp(expr, ir.DoubleType())
+
+            self.builder.store(expr, ptr)
 
     def gen_op(self, root, op):
         left = self._traverse(root.children[0])
@@ -385,9 +443,9 @@ class TppGen:
         i = 0
         for var_symbol in self.context.symbols:
             if isinstance(var_symbol, VarSymbol) and var_symbol.scope == fn.name and var_symbol.parameter:
-                if isinstance(self.type_to_llvmlite_type(var_symbol.type_, 0), ir.IntType) and isinstance(args[i].type, ir.DoubleType):
+                if isinstance(self.type_to_llvmlite_type(var_symbol.type_, var_symbol.index_list), ir.IntType) and isinstance(args[i].type, ir.DoubleType):
                     args[i] = self.builder.fptosi(args[i])
-                elif isinstance(self.type_to_llvmlite_type(var_symbol.type_, 0), ir.DoubleType) and isinstance(args[i].type, ir.IntType):
+                elif isinstance(self.type_to_llvmlite_type(var_symbol.type_, var_symbol.index_list), ir.DoubleType) and isinstance(args[i].type, ir.IntType):
                     args[i] = self.builder.sitofp(args[i], ir.DoubleType())
                 i += 1
 
@@ -452,7 +510,23 @@ class TppGen:
                 name = root.children[0].value
                 symbol = self.context.get_symbol(name, self.current_scope)
 
-                return self.builder.load(symbol.llvm_ref, "")
+                if len(root.children) == 1:
+                    return self.builder.load(symbol.llvm_ref, "")
+
+                def find_indexes(root):
+                    if root.value == "indice" and len(root.children) == 2:
+                        return find_indexes(root.children[0]) + [root.children[1]]
+                    return [root]
+
+                indexes = find_indexes(root.children[1])
+                print(indexes)
+                indexes = [ir.Constant(ir.IntType(32), 0)] + \
+                    [self._traverse(i) for i in indexes]
+
+                ptr = self.builder.gep(symbol.llvm_ref, indexes)
+                ptr = self.builder.load(ptr)
+
+                return ptr
 
             elif root.value == 'retorna':
                 return self.gen_return(root)
