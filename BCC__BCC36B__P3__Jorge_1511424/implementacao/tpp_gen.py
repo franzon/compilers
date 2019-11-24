@@ -40,17 +40,44 @@ class TppGen:
         main = self.module.get_global("principal")
         main.name = "main"
 
+        # pm_builder = binding.PassManagerBuilder()
+        # pm_builder.populate()
+
         llvm_ir = str(self.module)
 
+        print('Sem otimização')
         print(llvm_ir)
+
         mod = self.binding.parse_assembly(llvm_ir)
         mod.verify()
+
+        m_pass = binding.ModulePassManager()
+        m_pass.add_basic_alias_analysis_pass()
+        m_pass.add_cfg_simplification_pass()
+        m_pass.add_constant_merge_pass()
+        m_pass.add_dead_arg_elimination_pass()
+        m_pass.add_dead_code_elimination_pass()
+        m_pass.add_function_attrs_pass()
+        m_pass.add_global_dce_pass()
+        m_pass.add_gvn_pass()
+        m_pass.add_instruction_combining_pass()
+        m_pass.add_global_optimizer_pass()
+        m_pass.add_ipsccp_pass()
+        m_pass.add_licm_pass()
+        m_pass.add_sccp_pass()
+        m_pass.add_sroa_pass()
+        m_pass.add_type_based_alias_analysis_pass()
+        m_pass.run(mod)
+
+        print('\n\nCom otimização')
+        print(mod)
+
         self.engine.add_module(mod)
         self.engine.finalize_object()
         self.engine.run_static_constructors()
 
         with open('out.ll', 'w') as out:
-            out.write(llvm_ir)
+            out.write(str(mod))
 
     def declare_runtime_functions(self):
         t_escrevaInteiro = ir.FunctionType(ir.VoidType(), [ir.IntType(32)])
