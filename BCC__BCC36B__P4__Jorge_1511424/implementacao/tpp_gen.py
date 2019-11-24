@@ -62,10 +62,6 @@ class TppGen:
         m_pass.add_gvn_pass()
         m_pass.add_instruction_combining_pass()
         m_pass.add_global_optimizer_pass()
-        m_pass.add_ipsccp_pass()
-        m_pass.add_licm_pass()
-        m_pass.add_sccp_pass()
-        m_pass.add_sroa_pass()
         m_pass.add_type_based_alias_analysis_pass()
         m_pass.run(mod)
 
