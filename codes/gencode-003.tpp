@@ -6,7 +6,7 @@ inteiro principal()
 	a := 10    
 	se a > 5 então
 		se a < 20 então
-			ret := 1
+			ret := 100
 		senão
 			ret := 2
 		fim
@@ -14,5 +14,5 @@ inteiro principal()
 		ret := 0
   fim
 
-  retorna(0)
+  retorna(ret)
 fim

@@ -395,7 +395,7 @@ class TppGen:
             type_ = 'double'
 
         if type_ == 'int':
-            return self.builder.icmp_unsigned(op, left, right, "")
+            return self.builder.icmp_signed(op, left, right, "")
 
         return self.builder.fcmp_ordered(op, left, right, "")
 
